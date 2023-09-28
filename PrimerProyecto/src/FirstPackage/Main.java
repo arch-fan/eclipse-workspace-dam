@@ -1,5 +1,7 @@
 package FirstPackage;
 
+import java.util.Scanner;
+
 public class Main {
 	
 	public static void print(Object content) {
@@ -9,11 +11,12 @@ public class Main {
 	public static void main(String[] args) {
 		System.out.println("Hello world");
 		System.out.println("Probando Java");
+	
+		Scanner scanner = new Scanner(System.in);
 		
-		String cambio = "22";
-		Integer numero = Integer.parseInt(cambio);
+		String texto = scanner.nextLine();
+		System.out.println("Tu texto es: " + texto);
 		
-		print("hola");
-		print(numero);
+		scanner.close();
 	}	
 }
