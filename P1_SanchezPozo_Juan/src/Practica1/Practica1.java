@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class Practica1 {
 
-    // Método print para facilitar la verbosidad de System.out.print
+    // Metodo print para facilitar la verbosidad de System.out.print
     private static void print(String message) {
         System.out.print(message);
     }
@@ -22,34 +22,39 @@ public class Practica1 {
             print("""
 
 
-                        1) Verifica si un número es par
-                        2) Escribe un numero del 1-7 o un dia de la semana para recibir el número o el día.
-                        3) Da una calificación alfabética y recibe el equivalente numérico
-                        4) Convierte tu salario bruto a neto
+                        1) Verifica si un numero es par
+                        2) Escribe un numero del 1-7 o un dia de la semana para recibir el numero o el dia.
+                        3) Da una calificacion alfabetica y recibe el equivalente numerico
+                        4) Convierte tu factura en bruto a neto
                         5) Salir del ejercicio
 
-                    Elije tu opción: """);
+                    Elije tu opcion: """);
 
-            // Comprobamos que el usuario ha introducido un número
+            // Comprobamos que el usuario ha introducido un numero
             if (!sc.hasNextByte()) {
-                print("Elige una opción válida!");
+                print("Elige una opcion valida!");
                 sc.next();
                 continue;
             }
 
-            // Almacenamos la opción elegida por el usuario
+            // Almacenamos la opcion elegida por el usuario
             byte siguienteOpcion = sc.nextByte();
 
             /*
-             * Ejecutamos el ejercicio dependiendo la opcion elejida. Además, comrobamos que
-             * no haya fallo a la hora de pasar el tipo de dato ya que el método solamente
+             * Ejecutamos el ejercicio dependiendo la opcion elejida. Ademas, comrobamos que
+             * no haya fallo a la hora de pasar el tipo de dato ya que el metodo solamente
              * se encarga de ejecutar el ejercicio.
              */
             switch (siguienteOpcion) {
             case 1:
-                print("\nIntroduce el número: ");
+                print("\nIntroduce el numero: ");
                 if (!sc.hasNextInt()) {
-                    print("\nIntroduce un número válido!");
+                    print("\nIntroduce un numero valido!");
+                    /*
+                     * En matematicas, un numero par es un numero entero que es divisible entre 2
+                     * https://es.wikipedia.org/wiki/N%C3%BAmeros_pares_e_impares
+                     */
+                    print("\nRecuerda que los numeros pares e impares solamente pueden ser numeros enteros");
                     sc.next();
                     continue;
                 }
@@ -59,10 +64,10 @@ public class Practica1 {
 
                 print("""
 
-                        Debes indicar un número si quieres el día de la semana, o viceversa.
+                        Debes indicar un numero si quieres el dia de la semana, o viceversa.
                         Por ejemplo, si pones 1, recibes lunes, y si pones viernes, recibes 5.
 
-                        Introduce el número o el dia de la semana: """);
+                        Introduce el numero o el dia de la semana: """);
 
                 try {
                     byte numeroDia = sc.nextByte();
@@ -75,14 +80,14 @@ public class Practica1 {
 
                 print("""
 
-                        Debes introducir una nota y se te devolverá un caracter.
-                        Por ejemplo, A devuelve 15, la nota más alta. Puedes introducir (A, B, C, D o E)
+                        Debes introducir una nota y se te devolvera un caracter.
+                        Por ejemplo, E devuelve 15, la nota mas alta. Puedes introducir (A, B, C, D o E)
 
                         Introduce la nota en caracter: """);
 
                 String charInput = sc.next();
                 if (charInput.length() > 1) {
-                    print("Introduce una letra (calificación) válida!");
+                    print("Introduce una letra (calificacion) valida!");
                     continue;
                 }
                 calificacionPorLetra(charInput.toLowerCase().charAt(0));
@@ -96,7 +101,7 @@ public class Practica1 {
                         Introduce la factura en bruto: """);
 
                 if (!sc.hasNextDouble()) {
-                    print("Introduce un valor válido!");
+                    print("Introduce un valor valido!");
                     sc.next();
                     continue;
                 }
@@ -106,10 +111,9 @@ public class Practica1 {
                 sc.close();
                 System.exit(0);
                 break;
-            // Si ninguna de las 5 opciones ha sido elegida, le volvemos a mostrar el
-            // ejercicio
+            // Si ninguna de las 5 opciones ha sido elegida, le volvemos a mostrar el ejercicio
             default:
-                print("Introduce una opcion válida!");
+                print("Introduce una opcion valida!");
                 break;
             }
 
@@ -117,15 +121,15 @@ public class Practica1 {
 
     }
 
-    // A partir de aquí se declaran los métodos para ejecutar cada ejercicio.
+    // A partir de aqui se declaran los metodos para ejecutar cada ejercicio.
 
     /*
      * Los ejercicios siguen la regla de no devolver el valor, ya que ejecutan el
-     * ejercicio entero. Solamente hay que asegurarse en el bucle principal reciba
+     * ejercicio entero. Solamente hay que asegurarse de que en el bucle principal reciba
      * el tipo de dato correcto.
      */
 
-    // Ejercicio 1: Mostrar si el número recibido es par o impar.
+    // Ejercicio 1: Mostrar si el numero recibido es par o impar.
     static void esPar(int number) {
         // Utilizando el operador % conseguimos el resto de la division de los 2
         // operandos.
@@ -136,42 +140,42 @@ public class Practica1 {
         }
     }
 
-    // Ejercicio 2: Mostrar día de la semana mediante número, o viceversa.
-    // Utilizamos un genérico para aceptar numeros y string
+    // Ejercicio 2: Mostrar dia de la semana mediante numero, o viceversa.
+    // Utilizamos un generico para aceptar numeros y string
     static <T> void diaDeLaSemana(T dia) {
-        String[] nombresDias = { "lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo" };
+        String[] nombresDias = { "lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo" };
 
         // Comprobamos el tipo de dato que es, para mostrar una u otra salida.
         if (dia instanceof String) {
-            // Recuperamos el día en minúscula
+            // Recuperamos el dia en minuscula
             String diaString = ((String) dia).toLowerCase();
-            // Recuperamos el índice correspondiente al día en el array y mostramos si hay
+            // Recuperamos el indice correspondiente al dia en el array y mostramos si hay
             // indice. Si no hay, no.
             int indice = Arrays.asList(nombresDias).indexOf(diaString);
             if (indice != -1) {
-                print("\nEl " + diaString + " corresponde al día " + (indice + 1));
+                print("\nEl " + diaString + " corresponde al dia " + (indice + 1));
             } else {
-                print("\nDía no reconocido");
+                print("\nDia no reconocido");
             }
         } else {
             int diaInt = ((Number) dia).intValue();
             if (diaInt >= 1 && diaInt <= 7) {
-                print("\nEl día número " + diaInt + " corresponde al " + nombresDias[diaInt - 1]);
+                print("\nEl dia numero " + diaInt + " corresponde al " + nombresDias[diaInt - 1]);
             } else {
-                print("\nValor no válido para el día de la semana.");
+                print("\nValor no valido para el dia de la semana.");
             }
         }
     }
 
-    // Método para no repetir código en el ejercicio 3 a la hora de imprimir la
-    // calificación
+    // Metodo para no repetir codigo en el ejercicio 3 a la hora de imprimir la
+    // calificacion
     private static void imprimirCalificacion(int valor) {
-        print("La calificación es " + valor);
+        print("La calificacion es " + valor);
     }
 
-    // Ejercicio 3: Imprimir la calificación mediante el valor alfabético.
+    // Ejercicio 3: Imprimir la calificacion mediante el valor alfabetico.
     static void calificacionPorLetra(char letraCalificacion) {
-        char[] calificaciones = { 'e', 'd', 'c', 'b', 'a' };
+        char[] calificaciones = { 'a', 'b', 'c', 'd', 'e' };
 
         /*
          * Nos aprovechamos de que Java detecta los caracteres como carateres unicode,
@@ -190,8 +194,9 @@ public class Practica1 {
 
     // Ejercicio 4: Calcular la factura mediante el importe bruto, aplicando un 21%
     // de IVA
+    private static final int IMPUESTO = 21; // Introducimos el valor en porcentaje
     static void calcularFactura(double importeBruto) {
-        double importeNeto = importeBruto * 1.21;
-        print(String.format("El importe neto es %.2f", importeNeto));
+        double importeNeto = importeBruto * ((double)IMPUESTO / 100 + 1);
+        print(String.format("El importe neto es %.2f aplicando el %d%% de impuesto", importeNeto, IMPUESTO));
     }
 }
