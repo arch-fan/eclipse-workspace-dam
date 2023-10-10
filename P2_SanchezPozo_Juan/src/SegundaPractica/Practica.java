@@ -110,23 +110,15 @@ public class Practica {
 
     // Quinto Punto
     private static HashMap<Character, Integer> cuantasVecesApareceCadaNumero(String texto) {
-
         HashMap<Character, Integer> cadaNumero = new HashMap<>();
 
         for (char c : texto.toCharArray()) {
             if (Character.isDigit(c)) {
-                if (!cadaNumero.containsKey(c)) {
-                    cadaNumero.put(c, 1);
-                } else {
-                    Integer valor = cadaNumero.get(c);
-                    Integer nuevoValor = valor + 1;
-                    cadaNumero.put(c, nuevoValor);
-                }
+                cadaNumero.merge(c, 1, Integer::sum);
             }
         }
 
         return cadaNumero;
-
     }
 
     // Sexto punto
