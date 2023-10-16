@@ -4,44 +4,41 @@ import java.util.Scanner;
 
 public class Practica {
 
-    private static void print(String text) {
-        System.out.println(text);
-    }
-
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        
+
         String texto = "";
 
         do {
-            print("Introduce el texto: ");
+            System.out.println("Introduce el texto: ");
             texto = sc.nextLine();
         } while (texto.isBlank());
 
-        print("El texto contiene " + contarPalabras(texto) + " palabras, " + contarCaracteres(texto) + " caracteres, "
-                + contarDigitos(texto) + " son numeros");
+        System.out.println("El texto contiene " + contarPalabras(texto) + " palabras, " + contarCaracteres(texto)
+                + " caracteres, " + contarDigitos(texto) + " son numeros");
 
         String palabraMasLarga = encontrarPalabraMasLarga(texto);
-        print("La palabra mas larga es " + palabraMasLarga + " y tiene " + contarCaracteres(palabraMasLarga)
-                + " caracteres");
+        System.out.println("La palabra mas larga es " + palabraMasLarga + " y tiene "
+                + contarCaracteres(palabraMasLarga) + " caracteres");
 
         String tieneNaves = estaNaves(texto) ? "Si" : "No";
-        print(tieneNaves + " aparece la palabra Naves");
-        
+        System.out.println(tieneNaves + " aparece la palabra Naves");
+
         String letrasQueNoAparecen = String.valueOf(letraQueNoEstaDelAbc(texto)).replace(" ", "");
-        print("No aparecen las siguientes letras del abecedario: " + String.join(", ", letrasQueNoAparecen.split("")));
-        
+        System.out.println("No aparecen las siguientes letras del abecedario: "
+                + String.join(", ", letrasQueNoAparecen.split("")));
+
         int index = 0;
-        for(int i : cuantasVecesApareceCadaNumeroArray(texto)) {
-            if(i > 0) {
-                print("El numero " + index + " aparece " + i + " veces");
+        for (int i : cuantasVecesApareceCadaNumero(texto)) {
+            if (i > 0) {
+                System.out.println("El numero " + index + " aparece " + i + " veces");
             }
             index++;
         }
 
-        print("El texto al reves es: " + invertirTexto(texto));
+        System.out.println("El texto al reves es: " + invertirTexto(texto));
 
-        print("El texto con solo i: " + cambiarVocalesPorI(texto));
+        System.out.println("El texto con solo i: " + cambiarVocalesPorI(texto));
 
         sc.close();
     }
@@ -82,19 +79,6 @@ public class Practica {
         return palabraMasLarga;
     }
 
-    private static int contarLetras(String texto) {
-
-        int contador = 0;
-
-        for (char c : texto.toCharArray()) {
-            if (!Character.isDigit(c)) {
-                contador++;
-            }
-        }
-
-        return contador;
-    }
-
     // Tercer punto
     private static boolean estaNaves(String texto) {
         return texto.toLowerCase().contains("naves");
@@ -102,20 +86,21 @@ public class Practica {
 
     // Cuarto punto
     private static char[] letraQueNoEstaDelAbc(String texto) {
-        char[] abecedario = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        char[] abecedario = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+                's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
         for (Character c : abecedario) {
             if (texto.contains(c.toString())) {
                 abecedario[c - 'a'] = ' ';
             }
         }
-        
+
         return abecedario;
     }
-    
-    private static int[] cuantasVecesApareceCadaNumeroArray(String texto) {
+
+    private static int[] cuantasVecesApareceCadaNumero(String texto) {
         int[] digitos = new int[10];
-        
+
         for (char c : texto.toCharArray()) {
             if (Character.isDigit(c)) {
                 int index = Character.getNumericValue(c);
@@ -128,30 +113,11 @@ public class Practica {
 
     // Sexto punto
     private static String invertirTexto(String texto) {
-        StringBuilder textoInvertido = new StringBuilder();
-
-        textoInvertido.append(texto);
-        textoInvertido.reverse();
-
-        return textoInvertido.toString();
+        return new StringBuilder(texto).reverse().toString();
     }
 
     // Séptimo punto
     private static String cambiarVocalesPorI(String texto) {
-        char[] vocales = { 'a', 'e', 'o', 'u', 'A', 'E', 'O', 'U' };
-
-        String vocalesCambiadas = texto;
-
-        for (Character v : vocales) {
-            if (Character.isUpperCase(v)) {
-                vocalesCambiadas = vocalesCambiadas.replace(v, 'I');
-            } else {
-                vocalesCambiadas = vocalesCambiadas.replace(v, 'i');
-            }
-
-        }
-
-        return vocalesCambiadas;
-
+        return texto.replaceAll("[aeou]", "i").replaceAll("[AEOU]", "I");
     }
 }
