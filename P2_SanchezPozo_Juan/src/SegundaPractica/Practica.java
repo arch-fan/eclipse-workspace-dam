@@ -1,9 +1,6 @@
 package SegundaPractica;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Practica {
 
@@ -13,9 +10,13 @@ public class Practica {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        
+        String texto = "";
 
-        print("Introduce el texto: ");
-        String texto = sc.nextLine();
+        do {
+            print("Introduce el texto: ");
+            texto = sc.nextLine();
+        } while (texto.isBlank());
 
         print("El texto contiene " + contarPalabras(texto) + " palabras, " + contarCaracteres(texto) + " caracteres, "
                 + contarDigitos(texto) + " son numeros");
@@ -26,12 +27,17 @@ public class Practica {
 
         String tieneNaves = estaNaves(texto) ? "Si" : "No";
         print(tieneNaves + " aparece la palabra Naves");
-
-        print("No aparecen las siguientes letras del abecedario: " + letraQueNoEstaDelAbc(texto));
-
-        cuantasVecesApareceCadaNumero(texto).forEach((clave, valor) -> {
-            System.out.println("El numero " + clave + " aparece " + valor + " veces");
-        });
+        
+        String letrasQueNoAparecen = String.valueOf(letraQueNoEstaDelAbc(texto)).replace(" ", "");
+        print("No aparecen las siguientes letras del abecedario: " + String.join(", ", letrasQueNoAparecen.split("")));
+        
+        int index = 0;
+        for(int i : cuantasVecesApareceCadaNumeroArray(texto)) {
+            if(i > 0) {
+                print("El numero " + index + " aparece " + i + " veces");
+            }
+            index++;
+        }
 
         print("El texto al reves es: " + invertirTexto(texto));
 
@@ -95,30 +101,29 @@ public class Practica {
     }
 
     // Cuarto punto
-    private static Set<Character> letraQueNoEstaDelAbc(String texto) {
+    private static char[] letraQueNoEstaDelAbc(String texto) {
         char[] abecedario = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-        Set<Character> noEsta = new HashSet<>();
 
         for (Character c : abecedario) {
-            if (!texto.contains(c.toString())) {
-                noEsta.add(c);
+            if (texto.contains(c.toString())) {
+                abecedario[c - 'a'] = ' ';
             }
         }
-
-        return noEsta;
+        
+        return abecedario;
     }
-
-    // Quinto Punto
-    private static HashMap<Character, Integer> cuantasVecesApareceCadaNumero(String texto) {
-        HashMap<Character, Integer> cadaNumero = new HashMap<>();
-
+    
+    private static int[] cuantasVecesApareceCadaNumeroArray(String texto) {
+        int[] digitos = new int[10];
+        
         for (char c : texto.toCharArray()) {
             if (Character.isDigit(c)) {
-                cadaNumero.merge(c, 1, Integer::sum);
+                int index = Character.getNumericValue(c);
+                digitos[index]++;
             }
         }
 
-        return cadaNumero;
+        return digitos;
     }
 
     // Sexto punto
