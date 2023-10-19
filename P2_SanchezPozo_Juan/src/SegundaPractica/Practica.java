@@ -101,7 +101,7 @@ public class Practica {
                 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
         for (Character c : abecedario) {
-            if (texto.contains(c.toString())) {
+            if (texto.toLowerCase().contains(c.toString())) {
                 // Utilizamos la propiedad de los chars de poder restarse entre si para poder
                 // conseguir la posicion en la variable abecedario. Y la "borramos".
                 abecedario[c - 'a'] = ' ';
