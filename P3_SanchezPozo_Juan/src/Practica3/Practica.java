@@ -8,209 +8,231 @@ import java.util.Map;
 
 public class Practica {
 
-    private static ArrayList<Paciente> listaPacientes = Paciente.generarPacientesPrueba(); // new ArrayList<>();
-    private static Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) {
 
-    public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		ArrayList<Paciente> listaPacientes;
 
-//        System.out.println("¿Cuantos pacientes vas a introducir?: ");
-//        int nPacientes = sc.nextInt();
-//
-//        for (int i = 1; i <= nPacientes; i++) {
-//            System.out.println("Introduce el nombre del paciente " + i + ": ");
-//            sc.nextLine();
-//            String nombre = sc.nextLine();
-//
-//            System.out.println("Introduce el peso del paciente (en kg) " + i + ": ");
-//            double peso = sc.nextDouble();
-//
-//            System.out.println("Introduce la altura del paciente (en metros) " + i + ": ");
-//            double altura = sc.nextDouble();
-//
-//            listaPacientes.add(new Paciente(nombre, peso, altura));
-//
-//        }
+		System.out.println("¿Quieres utilizar los pacientes de prueba? (s/n): ");
 
-        System.out.println("El paciente mas bajo es " + getPacienteMasBajo(listaPacientes).getNombre());
-        System.out.println("El paciente con más peso es " + getPacienteMasPesado(listaPacientes).getNombre());
+		if (sc.nextLine().toLowerCase().equals("n")) {
+			listaPacientes = new ArrayList<>();
+			boolean otroPacienteMas = true;
 
-        Paciente pacienteIMCmasAlto = getPacienteIMCMasAlto(listaPacientes);
-        Paciente pacienteIMCmasBajo = getPacienteIMCMasBajo(listaPacientes);
+			do {
+				
+				String nombre;
+				do {
+					System.out.println("Introduce el nombre del paciente: ");
+					nombre = sc.nextLine();
+				} while (nombre.isEmpty());
 
-        System.out.println("El paciente con el IMC mas alto es " + pacienteIMCmasAlto.getNombre() + " con un IMC de "
-                + redondearDecimales(pacienteIMCmasAlto.calcularIMC()));
-        System.out.println("El paciente con el IMC mas bajo es " + pacienteIMCmasBajo.getNombre() + " con un IMC de "
-                + redondearDecimales(pacienteIMCmasBajo.calcularIMC()));
+				Double peso = null;
+				do {
+					System.out.println("Introduce el peso del paciente (en kilos): ");
+					String input = sc.nextLine();
+					try {
+						peso = Double.parseDouble(input);
+					} catch (NumberFormatException e) {
+						System.out.println("Introduce un numero valido!");
+						peso = null;
+					}
+				} while (peso == null);
 
-        System.out.println("La media de altura es " + getMediaAltura(listaPacientes) + " y la mediana es "
-                + getMedianaAltura(listaPacientes));
-        System.out.println("La media de peso es " + getMediaPeso(listaPacientes) + " y la mediana es "
-                + getMedianaPeso(listaPacientes));
+				Double altura = null;
+				do {
+					System.out.println("Introduce la altura del paciente (en metros): ");
+					String input = sc.nextLine();
+					try {
+						altura = Double.parseDouble(input);
+					} catch (NumberFormatException e) {
+						System.out.println("Introduce un numero valido!");
+						altura = null;
+					}
+				} while (altura == null);
+				
+				listaPacientes.add(new Paciente(nombre, peso, altura));
+				
+				System.out.println("¿Quieres añadir otro paciente? (s/n): ");
+				if (sc.nextLine().toLowerCase().equals("n")) otroPacienteMas = false;
+				
+			} while (otroPacienteMas);
 
-        clasificarPacientes(listaPacientes).forEach((peso, cantidad) -> {
-            System.out.println("Hay " + cantidad + " con " + peso);
-        });
+		} else {
+			listaPacientes = Paciente.generarPacientesPrueba();
+		}
 
-        setDietas(listaPacientes);
-        listaPacientes.forEach(paciente -> {
-            System.out.println(paciente.getNombre() + " debe cumplir con una dieta de " + paciente.getDieta() + "kcal");
-        });
+		System.out.println("\nResultados del programa: \n");
 
-        sc.close();
-    }
+		System.out.println("El paciente mas bajo es " + getPacienteMasBajo(listaPacientes).getNombre());
+		System.out.println("El paciente con más peso es " + getPacienteMasPesado(listaPacientes).getNombre());
 
-    private static double redondearDecimales(double n) {
-        return Math.round(n * 100.0) / 100.0;
-    }
+		Paciente pacienteIMCmasAlto = getPacienteIMCMasAlto(listaPacientes);
+		Paciente pacienteIMCmasBajo = getPacienteIMCMasBajo(listaPacientes);
 
-    private static Paciente getPacienteMasBajo(ArrayList<Paciente> listaPaciente) {
-        Paciente pacienteMasBajo = listaPaciente.get(0);
+		System.out.println("\nEl paciente con el IMC mas alto es " + pacienteIMCmasAlto.getNombre() + " con un IMC de "
+				+ redondearDecimales(pacienteIMCmasAlto.calcularIMC()));
+		System.out.println("El paciente con el IMC mas bajo es " + pacienteIMCmasBajo.getNombre() + " con un IMC de "
+				+ redondearDecimales(pacienteIMCmasBajo.calcularIMC()));
 
-        for (Paciente paciente : listaPaciente) {
-            if (paciente.getAltura() < pacienteMasBajo.getAltura()) {
-                pacienteMasBajo = paciente;
-            }
-        }
+		System.out.println("\nLa media de altura es " + getMediaAltura(listaPacientes) + " y la mediana es "
+				+ getMedianaAltura(listaPacientes));
+		System.out.println("La media de peso es " + getMediaPeso(listaPacientes) + " y la mediana es "
+				+ getMedianaPeso(listaPacientes));
 
-        return pacienteMasBajo;
-    }
+		System.out.println();
 
-    private static Paciente getPacienteMasPesado(ArrayList<Paciente> listaPaciente) {
-        Paciente pacienteMasPesado = listaPaciente.get(0);
+		getClasificacionPacientes(listaPacientes).forEach((peso, cantidad) -> {
+			System.out.println("Hay " + cantidad + " con " + peso);
+		});
 
-        for (Paciente paciente : listaPaciente) {
-            if (paciente.getPeso() > pacienteMasPesado.getPeso()) {
-                pacienteMasPesado = paciente;
-            }
-        }
+		System.out.println();
 
-        return pacienteMasPesado;
-    }
+		listaPacientes.forEach(paciente -> {
+			System.out.println(paciente.getNombre() + " debe cumplir con una dieta de "
+					+ paciente.getDieta().getCalorias() + "kcal");
+		});
 
-    private static Paciente getPacienteIMCMasAlto(ArrayList<Paciente> listaPaciente) {
-        Paciente pacienteIMCMasAlto = listaPaciente.get(0);
+		sc.close();
+	}
 
-        for (Paciente paciente : listaPaciente) {
-            if (paciente.calcularIMC() > pacienteIMCMasAlto.calcularIMC()) {
-                pacienteIMCMasAlto = paciente;
-            }
-        }
+	private static double redondearDecimales(double n) {
+		return Math.round(n * 100.0) / 100.0;
+	}
 
-        return pacienteIMCMasAlto;
-    }
+	private static double calcularMediana(ArrayList<Double> datos) {
+		Collections.sort(datos);
+		int longitudDatos = datos.size();
+		double mediana;
 
-    private static Paciente getPacienteIMCMasBajo(ArrayList<Paciente> listaPaciente) {
-        Paciente pacienteIMCMasBajo = listaPaciente.get(0);
+		if (longitudDatos % 2 == 0) {
+			Double valor1 = datos.get(longitudDatos / 2 - 1); // El primer valor en el medio
+			Double valor2 = datos.get(longitudDatos / 2); // El segundo valor en el medio
+			mediana = (valor1 + valor2) / 2;
+		} else {
+			mediana = datos.get(longitudDatos / 2); // Si es impar, solo hay un valor en el medio
+		}
 
-        for (Paciente paciente : listaPaciente) {
-            if (paciente.calcularIMC() < pacienteIMCMasBajo.calcularIMC()) {
-                pacienteIMCMasBajo = paciente;
-            }
-        }
+		return mediana;
+	}
 
-        return pacienteIMCMasBajo;
-    }
+	public static Paciente getPacienteMasBajo(ArrayList<Paciente> listaPacientes) {
+		Paciente pacienteMasBajo = listaPacientes.get(0);
 
-    private static double getMediaAltura(ArrayList<Paciente> listaPaciente) {
-        double alturasSumadas = 0;
+		for (Paciente paciente : listaPacientes) {
+			if (paciente.getAltura() < pacienteMasBajo.getAltura()) {
+				pacienteMasBajo = paciente;
+			}
+		}
 
-        for (Paciente paciente : listaPaciente) {
-            alturasSumadas += paciente.getAltura();
-        }
+		return pacienteMasBajo;
+	}
 
-        return redondearDecimales(alturasSumadas / listaPaciente.size());
-    }
+	public static Paciente getPacienteMasPesado(ArrayList<Paciente> listaPacientes) {
+		Paciente pacienteMasPesado = listaPacientes.get(0);
 
-    private static double getMediaPeso(ArrayList<Paciente> listaPaciente) {
-        double pesosSumados = 0;
+		for (Paciente paciente : listaPacientes) {
+			if (paciente.getPeso() > pacienteMasPesado.getPeso()) {
+				pacienteMasPesado = paciente;
+			}
+		}
 
-        for (Paciente paciente : listaPaciente) {
-            pesosSumados += paciente.getPeso();
-        }
+		return pacienteMasPesado;
+	}
 
-        return redondearDecimales(pesosSumados / listaPaciente.size());
-    }
+	public static Paciente getPacienteIMCMasAlto(ArrayList<Paciente> listaPacientes) {
+		Paciente pacienteIMCMasAlto = listaPacientes.get(0);
 
-    private static double calcularMediana(ArrayList<Double> datos) {
-        Collections.sort(datos);
-        int longitudDatos = datos.size();
-        double mediana;
+		for (Paciente paciente : listaPacientes) {
+			if (paciente.calcularIMC() > pacienteIMCMasAlto.calcularIMC()) {
+				pacienteIMCMasAlto = paciente;
+			}
+		}
 
-        if (longitudDatos % 2 == 0) {
-            Double valor1 = datos.get(longitudDatos / 2 - 1); // El primer valor en el medio
-            Double valor2 = datos.get(longitudDatos / 2); // El segundo valor en el medio
-            mediana = (valor1 + valor2) / 2;
-        } else {
-            mediana = datos.get(longitudDatos / 2); // Si es impar, solo hay un valor en el medio
-        }
+		return pacienteIMCMasAlto;
+	}
 
-        return mediana;
-    }
+	public static Paciente getPacienteIMCMasBajo(ArrayList<Paciente> listaPacientes) {
+		Paciente pacienteIMCMasBajo = listaPacientes.get(0);
 
-    private static double getMedianaAltura(ArrayList<Paciente> listaPaciente) {
-        ArrayList<Double> alturaPacientes = new ArrayList<>();
+		for (Paciente paciente : listaPacientes) {
+			if (paciente.calcularIMC() < pacienteIMCMasBajo.calcularIMC()) {
+				pacienteIMCMasBajo = paciente;
+			}
+		}
 
-        for (Paciente paciente : listaPaciente) {
-            alturaPacientes.add(paciente.getAltura());
-        }
+		return pacienteIMCMasBajo;
+	}
 
-        return redondearDecimales(calcularMediana(alturaPacientes));
-    }
+	public static double getMediaAltura(ArrayList<Paciente> listaPacientes) {
+		double alturasSumadas = 0;
 
-    private static double getMedianaPeso(ArrayList<Paciente> listaPaciente) {
-        ArrayList<Double> pesoPacientes = new ArrayList<>();
+		for (Paciente paciente : listaPacientes) {
+			alturasSumadas += paciente.getAltura();
+		}
 
-        for (Paciente paciente : listaPaciente) {
-            pesoPacientes.add(paciente.getPeso());
-        }
+		return redondearDecimales(alturasSumadas / listaPacientes.size());
+	}
 
-        return redondearDecimales(calcularMediana(pesoPacientes));
-    }
+	public static double getMediaPeso(ArrayList<Paciente> listaPacientes) {
+		double pesosSumados = 0;
 
-    public static Map<String, Integer> clasificarPacientes(ArrayList<Paciente> listaPaciente) {
-        Map<String, Integer> clasificacion = new HashMap<>();
-        int pesoBajo = 0;
-        int pesoNormal = 0;
-        int sobrepeso = 0;
-        int obesidad = 0;
+		for (Paciente paciente : listaPacientes) {
+			pesosSumados += paciente.getPeso();
+		}
 
-        for (Paciente paciente : listaPaciente) {
-            double imc = paciente.calcularIMC();
+		return redondearDecimales(pesosSumados / listaPacientes.size());
+	}
 
-            if (imc < 18.5) {
-                pesoBajo++;
-            } else if (imc < 25.0) {
-                pesoNormal++;
-            } else if (imc < 40.0) {
-                sobrepeso++;
-            } else {
-                obesidad++;
-            }
-        }
+	public static double getMedianaAltura(ArrayList<Paciente> listaPacientes) {
+		ArrayList<Double> alturaPacientes = new ArrayList<>();
 
-        clasificacion.put("Peso Bajo", pesoBajo);
-        clasificacion.put("Peso Normal", pesoNormal);
-        clasificacion.put("Sobrepeso", sobrepeso);
-        clasificacion.put("Obesidad", obesidad);
+		for (Paciente paciente : listaPacientes) {
+			alturaPacientes.add(paciente.getAltura());
+		}
 
-        return clasificacion;
+		return redondearDecimales(calcularMediana(alturaPacientes));
+	}
 
-    }
+	public static double getMedianaPeso(ArrayList<Paciente> listaPacientes) {
+		ArrayList<Double> pesoPacientes = new ArrayList<>();
 
-    public static void setDietas(ArrayList<Paciente> listaPaciente) {
-        for (Paciente paciente : listaPaciente) {
-            double imc = paciente.calcularIMC();
+		for (Paciente paciente : listaPacientes) {
+			pesoPacientes.add(paciente.getPeso());
+		}
 
-            if (imc < 18.5) {
-                paciente.setDieta(3000);
-            } else if (imc < 25.0) {
-                paciente.setDieta(2500);
-            } else if (imc < 40.0) {
-                paciente.setDieta(2000);
-            } else {
-                paciente.setDieta(1500);
-            }
-        }
-    }
+		return redondearDecimales(calcularMediana(pesoPacientes));
+	}
 
+	public static Map<String, Integer> getClasificacionPacientes(ArrayList<Paciente> listaPaciente) {
+		Map<String, Integer> clasificacion = new HashMap<>();
+		int pesoBajo = 0;
+		int pesoNormal = 0;
+		int sobrepeso = 0;
+		int obesidad = 0;
+
+		for (Paciente paciente : listaPaciente) {
+			switch (paciente.getDieta()) {
+			case BAJO_PESO:
+				pesoBajo++;
+				break;
+			case PESO_NORMAL:
+				pesoNormal++;
+				break;
+			case SOBREPESO:
+				sobrepeso++;
+			case OBESIDAD:
+				obesidad++;
+				break;
+			}
+		}
+
+		clasificacion.put("Peso Bajo", pesoBajo);
+		clasificacion.put("Peso Normal", pesoNormal);
+		clasificacion.put("Sobrepeso", sobrepeso);
+		clasificacion.put("Obesidad", obesidad);
+
+		return clasificacion;
+
+	}
 }
