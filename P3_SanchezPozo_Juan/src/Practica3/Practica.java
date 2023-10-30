@@ -2,7 +2,7 @@ package Practica3;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 import java.util.Map;
 
@@ -11,16 +11,21 @@ public class Practica {
 	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);
+		// Incializamos el Array List de pacientes en los que guardaremos los pacientes
+		// con los que trabajaremos durante todo el programa
 		ArrayList<Paciente> listaPacientes;
 
 		System.out.print("¿Quieres utilizar los pacientes de prueba? (s/n): ");
 
+		// Si el usuario introduce la n, empezaras a introducir los pacientes
+		// manualmente, si no, utilizara los que estan de ejemplo en la clase Paciente
+		// con el metido estatico Paciente.generarPacientesPrueba
 		if (sc.nextLine().toLowerCase().equals("n")) {
 			listaPacientes = new ArrayList<>();
 			boolean otroPacienteMas = true;
 
 			do {
-				
+
 				String nombre;
 				do {
 					System.out.print("Introduce el nombre del paciente: ");
@@ -31,6 +36,8 @@ public class Practica {
 				do {
 					System.out.print("Introduce el peso del paciente (en kilos): ");
 					String input = sc.nextLine();
+					// En este bloque try catch nos aseguramos de que el valor sea un doble, si no,
+					// volvemos a preguntar el valor de nuevo en el catch. Igual con la altura.
 					try {
 						peso = Double.parseDouble(input);
 					} catch (NumberFormatException e) {
@@ -50,12 +57,13 @@ public class Practica {
 						altura = null;
 					}
 				} while (altura == null);
-				
+
 				listaPacientes.add(new Paciente(nombre, peso, altura));
-				
-				System.out.print("¿Quieres añadir otro paciente? (s/n): ");
-				if (sc.nextLine().toLowerCase().equals("n")) otroPacienteMas = false;
-				
+
+				System.out.print("¿Quieres anadir otro paciente? (s/n): ");
+				if (sc.nextLine().toLowerCase().equals("n"))
+					otroPacienteMas = false;
+
 			} while (otroPacienteMas);
 
 		} else {
@@ -65,15 +73,15 @@ public class Practica {
 		System.out.println("\nResultados del programa: \n");
 
 		System.out.println("El paciente mas bajo es " + getPacienteMasBajo(listaPacientes).getNombre());
-		System.out.println("El paciente con más peso es " + getPacienteMasPesado(listaPacientes).getNombre());
+		System.out.println("El paciente con mas peso es " + getPacienteMasPesado(listaPacientes).getNombre());
 
 		Paciente pacienteIMCmasAlto = getPacienteIMCMasAlto(listaPacientes);
 		Paciente pacienteIMCmasBajo = getPacienteIMCMasBajo(listaPacientes);
 
 		System.out.println("\nEl paciente con el IMC mas alto es " + pacienteIMCmasAlto.getNombre() + " con un IMC de "
-				+ redondearDecimales(pacienteIMCmasAlto.calcularIMC()));
+				+ redondearDecimales(pacienteIMCmasAlto.calcularIMC(), 2));
 		System.out.println("El paciente con el IMC mas bajo es " + pacienteIMCmasBajo.getNombre() + " con un IMC de "
-				+ redondearDecimales(pacienteIMCmasBajo.calcularIMC()));
+				+ redondearDecimales(pacienteIMCmasBajo.calcularIMC(), 2));
 
 		System.out.println("\nLa media de altura es " + getMediaAltura(listaPacientes) + " y la mediana es "
 				+ getMedianaAltura(listaPacientes));
@@ -96,11 +104,26 @@ public class Practica {
 		sc.close();
 	}
 
-	private static double redondearDecimales(double n) {
-		return Math.round(n * 100.0) / 100.0;
+	// Metodo reutilizable para redondear a 2 decimales de un doble.
+	/**
+	 * @param n Numero a redondear
+	 * @param i Cantidad de decimales a los que redondear
+	 * @return Devuelve un doble redondeado a los decimales especificados
+	 */
+	private static double redondearDecimales(double n, int i) {
+		double decimales = Math.pow(10.0, i);
+		
+		return Math.round(n * decimales) / decimales;
 	}
 
+	/**
+	 * Metodo reutilizable para calcular la mediana dado una lista de nmeros
+	 * @param datos ArrayList de numeros a ordenar
+	 * @return Devuelve la mediana en un doble
+	 */
 	private static double calcularMediana(ArrayList<Double> datos) {
+		// Para calcular la mediana, necesitamos ordenar de menor a mayor los numeros
+		// del array con el que vayamos a operar.
 		Collections.sort(datos);
 		int longitudDatos = datos.size();
 		double mediana;
@@ -116,9 +139,14 @@ public class Practica {
 		return mediana;
 	}
 
+	// Los 4 siguientes metodos tienen casi la misma funcionalidad, por lo que se
+	// explica en el primero y se aplica a los 4 siguientes
 	public static Paciente getPacienteMasBajo(ArrayList<Paciente> listaPacientes) {
+		// Empezamos asumiendo que el paciente 0 es el mas bajo.
 		Paciente pacienteMasBajo = listaPacientes.get(0);
 
+		// Iteramos por cada paciente, comparando la altura del paciente guardado en la
+		// variable con el siguiente.
 		for (Paciente paciente : listaPacientes) {
 			if (paciente.getAltura() < pacienteMasBajo.getAltura()) {
 				pacienteMasBajo = paciente;
@@ -164,14 +192,17 @@ public class Practica {
 		return pacienteIMCMasBajo;
 	}
 
+	// Los 2 metodos de media funcionan bastante similar, con la primera explicacion
+	// se entiende el segundo.
 	public static double getMediaAltura(ArrayList<Paciente> listaPacientes) {
+		// Sumamos todas las alturas de los pacientes en la variable alturasSumadas
 		double alturasSumadas = 0;
 
 		for (Paciente paciente : listaPacientes) {
 			alturasSumadas += paciente.getAltura();
 		}
-
-		return redondearDecimales(alturasSumadas / listaPacientes.size());
+		// Devolvemos el valor calculando la media despues de redondearlo
+		return redondearDecimales(alturasSumadas / listaPacientes.size(), 2);
 	}
 
 	public static double getMediaPeso(ArrayList<Paciente> listaPacientes) {
@@ -181,37 +212,47 @@ public class Practica {
 			pesosSumados += paciente.getPeso();
 		}
 
-		return redondearDecimales(pesosSumados / listaPacientes.size());
+		return redondearDecimales(pesosSumados / listaPacientes.size(), 2);
 	}
 
+	// Los 2 metodos de media funcionan bastante similar, con la primera explicacion
+	// se entiende el segundo.
 	public static double getMedianaAltura(ArrayList<Paciente> listaPacientes) {
+		// Creamos un ArrayList de todas las alturas de los pacientes
 		ArrayList<Double> alturaPacientes = new ArrayList<>();
 
 		for (Paciente paciente : listaPacientes) {
 			alturaPacientes.add(paciente.getAltura());
 		}
-
-		return redondearDecimales(calcularMediana(alturaPacientes));
+		// Devolvemos el resultado de la mediana redondeado
+		return redondearDecimales(calcularMediana(alturaPacientes), 2);
 	}
 
 	public static double getMedianaPeso(ArrayList<Paciente> listaPacientes) {
+		// Guardamos todos los pesos de los pacientes en un array, el cual pasamos a
+		// calcularMediana
 		ArrayList<Double> pesoPacientes = new ArrayList<>();
 
 		for (Paciente paciente : listaPacientes) {
 			pesoPacientes.add(paciente.getPeso());
 		}
 
-		return redondearDecimales(calcularMediana(pesoPacientes));
+		return redondearDecimales(calcularMediana(pesoPacientes), 2);
 	}
 
+	// Recuperamos la clasificacion de los pacientes en pares clave valor.
 	public static Map<String, Integer> getClasificacionPacientes(ArrayList<Paciente> listaPaciente) {
-		Map<String, Integer> clasificacion = new HashMap<>();
+		// Creamos un LinkedHashMap para guardar los pares en orden de introduccion.
+		Map<String, Integer> clasificacion = new LinkedHashMap<>();
+		// 4 variables en las que guardaremos cuanta gente hay de cada peso.
 		int pesoBajo = 0;
 		int pesoNormal = 0;
 		int sobrepeso = 0;
 		int obesidad = 0;
 
 		for (Paciente paciente : listaPaciente) {
+			// Por cada paciente, verificamos que tipo de dieta tiene mediante el enum
+			// TipoDieta.
 			switch (paciente.getDieta()) {
 			case BAJO_PESO:
 				pesoBajo++;
@@ -221,6 +262,7 @@ public class Practica {
 				break;
 			case SOBREPESO:
 				sobrepeso++;
+				break;
 			case OBESIDAD:
 				obesidad++;
 				break;
