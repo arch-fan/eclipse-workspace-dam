@@ -13,7 +13,7 @@ public class Practica {
 		Scanner sc = new Scanner(System.in);
 		ArrayList<Paciente> listaPacientes;
 
-		System.out.println("¿Quieres utilizar los pacientes de prueba? (s/n): ");
+		System.out.print("¿Quieres utilizar los pacientes de prueba? (s/n): ");
 
 		if (sc.nextLine().toLowerCase().equals("n")) {
 			listaPacientes = new ArrayList<>();
@@ -23,13 +23,13 @@ public class Practica {
 				
 				String nombre;
 				do {
-					System.out.println("Introduce el nombre del paciente: ");
+					System.out.print("Introduce el nombre del paciente: ");
 					nombre = sc.nextLine();
 				} while (nombre.isEmpty());
 
 				Double peso = null;
 				do {
-					System.out.println("Introduce el peso del paciente (en kilos): ");
+					System.out.print("Introduce el peso del paciente (en kilos): ");
 					String input = sc.nextLine();
 					try {
 						peso = Double.parseDouble(input);
@@ -41,7 +41,7 @@ public class Practica {
 
 				Double altura = null;
 				do {
-					System.out.println("Introduce la altura del paciente (en metros): ");
+					System.out.print("Introduce la altura del paciente (en metros): ");
 					String input = sc.nextLine();
 					try {
 						altura = Double.parseDouble(input);
@@ -53,7 +53,7 @@ public class Practica {
 				
 				listaPacientes.add(new Paciente(nombre, peso, altura));
 				
-				System.out.println("¿Quieres añadir otro paciente? (s/n): ");
+				System.out.print("¿Quieres añadir otro paciente? (s/n): ");
 				if (sc.nextLine().toLowerCase().equals("n")) otroPacienteMas = false;
 				
 			} while (otroPacienteMas);
