@@ -40,6 +40,15 @@ public class Practica {
 					// volvemos a preguntar el valor de nuevo en el catch. Igual con la altura.
 					try {
 						peso = Double.parseDouble(input);
+
+						if (peso < 0) {
+							System.out.println("El peso no puede ser menor a 0. Por favor, ingresa un valor valido.");
+							peso = null;
+						} else if (peso > 635) {
+							System.out.println(
+									"El peso no puede ser mayor a la persona mas obesa del mundo. Por favor, ingresa un valor valido.");
+							peso = null;
+						}
 					} catch (NumberFormatException e) {
 						System.out.println("Introduce un numero valido!");
 						peso = null;
@@ -52,6 +61,16 @@ public class Practica {
 					String input = sc.nextLine();
 					try {
 						altura = Double.parseDouble(input);
+
+						if (altura < 0.5) {
+							System.out.println(
+									"La altura no puede ser menor a la persona mas baja del mundo. Por favor, ingresa un valor valido.");
+							altura = null;
+						} else if (altura > 2.72) {
+							System.out.println(
+									"La altura no puede ser mayor a la persona mas alta del mundo. Por favor, ingresa un valor valido.");
+							altura = null;
+						}
 					} catch (NumberFormatException e) {
 						System.out.println("Introduce un numero valido!");
 						altura = null;

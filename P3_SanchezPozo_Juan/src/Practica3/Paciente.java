@@ -25,6 +25,11 @@ public class Paciente {
 	 * @param altura Altura del paciente en metros.
 	 */
 	public Paciente(String nombre, double peso, double altura) {
+		
+		if (peso < 0) {
+	        throw new IllegalArgumentException("El peso no puede ser menor a 0");
+	    }
+		
 		this.nombre = nombre;
 		this.peso = peso;
 		this.altura = altura;
