@@ -10,9 +10,12 @@ public class Paciente {
 	private double altura; // Altura del paciente en metros.
 	private TipoDieta dieta; // Tipo de dieta del paciente.
 
-	private static final double IMC_PESO_BAJO = 18.5; // Constante para el IMC de bajo peso.
-	private static final double IMC_PESO_NORMAL = 25.0; // Constante para el IMC de peso normal.
-	private static final double IMC_SOBREPESO = 40.0; // Constante para el IMC de sobrepeso.
+	private static final double IMC_PESO_BAJO = 18.5; // Constante para el IMC de bajo peso. Es el tope de IMC para peso
+														// bajo.
+	private static final double IMC_PESO_NORMAL = 25.0; // Constante para el IMC de peso normal. Es el tope de IMC para
+														// peso normal.
+	private static final double IMC_SOBREPESO = 40.0; // Constante para el IMC de sobrepeso. Es el tope de IMC para
+														// sobrepeso.
 
 	/**
 	 * Constructor de la clase Paciente.
@@ -76,9 +79,9 @@ public class Paciente {
 		pacientes.add(new Paciente("Alberto", 76.2, 1.80));
 		pacientes.add(new Paciente("Sara", 64.7, 1.67));
 		pacientes.add(new Paciente("Antonio", 90.5, 1.88));
-		pacientes.add(new Paciente("Beatriz", 69.4, 1.72));
+		pacientes.add(new Paciente("Beatriz", 131.2, 1.66));
 		pacientes.add(new Paciente("Manuel", 74.9, 1.75));
-		pacientes.add(new Paciente("Lorena", 57.8, 1.62));
+		pacientes.add(new Paciente("Lorena", 128.2, 1.62));
 		pacientes.add(new Paciente("Roberto", 83.3, 1.83));
 		pacientes.add(new Paciente("Paula", 61.6, 1.64));
 		pacientes.add(new Paciente("Alberto", 78.4, 1.79));
@@ -94,7 +97,7 @@ public class Paciente {
 		pacientes.add(new Paciente("Nuria", 66.4, 1.71));
 		pacientes.add(new Paciente("Gonzalo", 73.1, 1.76));
 		pacientes.add(new Paciente("Laura", 55.7, 1.60));
-		pacientes.add(new Paciente("Marcos", 86.2, 1.85));
+		pacientes.add(new Paciente("Marcos", 122.4, 1.85));
 		pacientes.add(new Paciente("Cristina", 70.0, 1.73));
 		pacientes.add(new Paciente("Alejandro", 77.9, 1.78));
 		pacientes.add(new Paciente("Silvia", 59.8, 1.66));
@@ -107,7 +110,6 @@ public class Paciente {
 		pacientes.add(new Paciente("José María", 79.5, 1.79));
 		pacientes.add(new Paciente("Lucía", 65.0, 1.72));
 		pacientes.add(new Paciente("Fernando", 74.3, 1.75));
-		pacientes.add(new Paciente("Carmen", 56.9, 1.61));
 
 		return pacientes;
 	}

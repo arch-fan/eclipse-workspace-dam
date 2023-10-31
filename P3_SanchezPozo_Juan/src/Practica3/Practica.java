@@ -112,12 +112,13 @@ public class Practica {
 	 */
 	private static double redondearDecimales(double n, int i) {
 		double decimales = Math.pow(10.0, i);
-		
+
 		return Math.round(n * decimales) / decimales;
 	}
 
 	/**
 	 * Metodo reutilizable para calcular la mediana dado una lista de nmeros
+	 * 
 	 * @param datos ArrayList de numeros a ordenar
 	 * @return Devuelve la mediana en un doble
 	 */
