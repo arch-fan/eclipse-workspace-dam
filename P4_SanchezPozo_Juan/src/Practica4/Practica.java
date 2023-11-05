@@ -1,6 +1,7 @@
 package Practica4;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Practica {
 
@@ -68,17 +69,34 @@ public class Practica {
 				calcularMedia(tiempos.get(equipos.indexOf(e2)))));
 		return equiposOrdenados;
 	}
+	
+	/* 
+	 * equiposOrdenados.sort((e1, e2) -> {
+	        // Para cada equipo, obtenemos su índice en la lista original
+	        int indiceE1 = equipos.indexOf(e1);
+	        int indiceE2 = equipos.indexOf(e2);
+	        
+	        // Utilizamos el índice para obtener los tiempos del equipo
+	        double[] tiemposE1 = tiempos.get(indiceE1);
+	        double[] tiemposE2 = tiempos.get(indiceE2);
+	        
+	        // Calculamos la media de los tiempos de cada equipo
+	        double mediaE1 = calcularMedia(tiemposE1);
+	        double mediaE2 = calcularMedia(tiemposE2);
+	        
+	        // Comparamos las medias de los tiempos de los equipos
+	        return Double.compare(mediaE1, mediaE2);
+	    });
+	 * */
 
 	private static double calcularKmh(double k, double h) {
 		return k / h;
 	}
 
 	private static double calcularKmhEquipo(double[] tiempoEquipo) {
-		double sumaKmh = 0;
-		for (int i = 0; i < tiempoEquipo.length; i++) {
-			sumaKmh += calcularKmh(etapas[i], tiempoEquipo[i]);
-		}
-		return sumaKmh / tiempoEquipo.length;
+		double kmhTotal = Arrays.stream(etapas).sum();
+		double tiempoTotal = Arrays.stream(tiempoEquipo).sum();
+		return calcularKmh(kmhTotal, tiempoTotal);
 	}
 
 	private static double redondearDecimales(double n, int cantidad) {
