@@ -16,50 +16,52 @@ public class Practica {
 		ArrayList<String[]> equipos = new ArrayList<>();
 		ArrayList<double[]> tiempos = new ArrayList<>();
 
-		Scanner sc = new Scanner(System.in);
+		apuntarComponentes(equipos, tiempos);
 
-		boolean masEquipos = true;
-		int nEquipo = 1;
-		// Bucle principal para introducir datos
-		while (masEquipos) {
-
-			String[] equipo = new String[3];
-			double[] tiempoEquipo = new double[etapas.length];
-
-			System.out.print("Introduce el nombre del equipo " + nEquipo + ": ");
-			equipo[0] = sc.nextLine();
-			System.out.print("Introduce el nombre del primer componente: ");
-			equipo[1] = sc.nextLine();
-			System.out.print("Introduce el nombre del segundo componente: ");
-			equipo[2] = sc.nextLine();
-
-			// Bucle para guaradr el tiempo de cada etapa.
-			for (int i = 0; i < etapas.length; i++) {
-				boolean estaBien = false;
-				do {
-					System.out.print("Introduce el tiempo de la etapa " + (i + 1) + ": ");
-					// Utilizamos un try catch para asegurarnos de que el valor introducido sea un
-					// double.
-					try {
-						double valor = Double.parseDouble(sc.nextLine());
-						tiempoEquipo[i] = valor;
-						estaBien = true;
-					} catch (NumberFormatException e) {
-						System.out.println("Introduce un valor correcto!!");
-					}
-				} while (!estaBien);
-			}
-
-			equipos.add(equipo);
-			tiempos.add(tiempoEquipo);
-			nEquipo++;
-			System.out.print("Quieres introducir otro equipo? (y/n): ");
-
-			// Si el usuario introduce n, deja de introducir valores. Si le da enter, por
-			// defecto te pide otro equipo.
-			if (sc.nextLine().toLowerCase().equals("n"))
-				masEquipos = false;
-		}
+//		Scanner sc = new Scanner(System.in);
+//
+//		boolean masEquipos = true;
+//		int nEquipo = 1;
+//		// Bucle principal para introducir datos
+//		while (masEquipos) {
+//
+//			String[] equipo = new String[3];
+//			double[] tiempoEquipo = new double[etapas.length];
+//
+//			System.out.print("Introduce el nombre del equipo " + nEquipo + ": ");
+//			equipo[0] = sc.nextLine();
+//			System.out.print("Introduce el nombre del primer componente: ");
+//			equipo[1] = sc.nextLine();
+//			System.out.print("Introduce el nombre del segundo componente: ");
+//			equipo[2] = sc.nextLine();
+//
+//			// Bucle para guaradr el tiempo de cada etapa.
+//			for (int i = 0; i < etapas.length; i++) {
+//				boolean estaBien = false;
+//				do {
+//					System.out.print("Introduce el tiempo de la etapa " + (i + 1) + ": ");
+//					// Utilizamos un try catch para asegurarnos de que el valor introducido sea un
+//					// double.
+//					try {
+//						double valor = Double.parseDouble(sc.nextLine());
+//						tiempoEquipo[i] = valor;
+//						estaBien = true;
+//					} catch (NumberFormatException e) {
+//						System.out.println("Introduce un valor correcto!!");
+//					}
+//				} while (!estaBien);
+//			}
+//
+//			equipos.add(equipo);
+//			tiempos.add(tiempoEquipo);
+//			nEquipo++;
+//			System.out.print("Quieres introducir otro equipo? (y/n): ");
+//
+//			// Si el usuario introduce n, deja de introducir valores. Si le da enter, por
+//			// defecto te pide otro equipo.
+//			if (sc.nextLine().toLowerCase().equals("n"))
+//				masEquipos = false;
+//		}
 
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
@@ -90,7 +92,40 @@ public class Practica {
 							+ redondearDecimales(calcularKmh(etapas[i], tiempos.get(indices[i])[i]), 2) + " km/h.");
 		}
 
-		sc.close();
+//		sc.close();
+	}
+
+	public static void apuntarComponentes(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
+		equipos.add(new String[] { "Gustavo Runners", "Marta Diaz", "Peter" });
+		tiempos.add(new double[] { 5.50, 4.30, 4.50, 6.30 });
+
+		equipos.add(new String[] { "Luisa Speedsters", "Carlos Perez", "Anna" });
+		tiempos.add(new double[] { 6.20, 5.10, 4.90, 7.00 });
+
+		equipos.add(new String[] { "Juan Sprinters", "Elena Rodriguez", "Carlos" });
+		tiempos.add(new double[] { 5.80, 4.70, 4.60, 6.50 });
+
+		equipos.add(new String[] { "Laura Racers", "David Gomez", "Emma" });
+		tiempos.add(new double[] { 5.90, 4.60, 4.70, 6.70 });
+
+		equipos.add(new String[] { "Roberto Blazers", "Sara Gonzalez", "Michael" });
+		tiempos.add(new double[] { 5.70, 4.40, 4.80, 6.90 });
+
+		equipos.add(new String[] { "Diego Sprinters", "Olivia Smith", "Lucas" });
+		tiempos.add(new double[] { 6.00, 4.50, 4.60, 6.80 });
+
+		equipos.add(new String[] { "Maria Rushers", "Juan Martinez", "Sophia" });
+		tiempos.add(new double[] { 5.60, 4.80, 4.90, 6.60 });
+
+		equipos.add(new String[] { "Daniel Racers", "Paula Ruiz", "Liam" });
+		tiempos.add(new double[] { 5.50, 4.90, 4.60, 6.40, 6.00, 4.50, 4.60, 6.80 });
+
+		equipos.add(new String[] { "Natalia Blazers", "Hector Sanchez", "Isabella" });
+		tiempos.add(new double[] { 5.80, 4.70, 4.70, 6.30 });
+
+		equipos.add(new String[] { "Pablo Speedsters", "Eva Hernandez", "Noah" });
+		tiempos.add(new double[] { 6.10, 5.00, 4.80, 1.20, 5.50, 1.30, 1.50, 10.30 });
+
 	}
 
 	// Devuelve la lista de todos los equipos de manera ordenada por tiempo.
@@ -148,7 +183,11 @@ public class Practica {
 		double kmhTotal = Arrays.stream(etapas).sum();
 		double tiempoTotal = Arrays.stream(tiempoEquipo).sum();
 		// Devolvemos el metodo para calcular los kmh totales.
-		return calcularKmh(kmhTotal, tiempoTotal);
+		if (tiempoEquipo.length > 4) {
+			return calcularKmh(kmhTotal, tiempoTotal / 2);
+		} else {
+			return calcularKmh(kmhTotal, tiempoTotal);
+		}
 	}
 
 	// Hecho por Pedro
@@ -162,29 +201,13 @@ public class Practica {
 	}
 
 	// Hecho por David y Jorge
-	public static int[] corredorMasRapidoPorEtapa(ArrayList<double[]> tiempos) {
-		// Creamos un array con la cantidad de posiciones como etapas haya.
-		int[] indices = new int[etapas.length];
-		// Iteramos cada etapa
-		for (int i = 0; i < etapas.length; i++) {
-			// Guardamos el valor maximo de doble, que despues se reemplazara por el menos
-			// tiempo de la etapa.
-			double minTiempo = Double.MAX_VALUE;
-			// Guardamos el indice del equipo con el menor tiempo de la etapa
-			int minIndex = -1;
-			// Iteramos todos los tiempos guardados.
-			for (int j = 0; j < tiempos.size(); j++) {
-				// Verificamos si el tiempo de la etapa y de la posicion del tiempo del equipo
-				// en esa etapa es menor al minTiempo.
-				if (tiempos.get(j)[i] < minTiempo) {
-					minTiempo = tiempos.get(j)[i];
-					minIndex = j;
-				}
-			}
-			indices[i] = minIndex;
-		}
-		return indices;
-	}
+//	public static String corredorMasRapidoPorEtapa(ArrayList<double[]> tiempos, int nEtapa) {
+//		double etapa = etapas[nEtapa];
+////		for(int i = 0; i < ) {
+////			
+////		}
+//	}
+
 
 	// Hecho por Jorge y Pedro
 	// Calcula la media de un array de numeros, que en este caso utilizamos para
