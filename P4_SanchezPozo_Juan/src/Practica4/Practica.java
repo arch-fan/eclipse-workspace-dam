@@ -9,8 +9,10 @@ public class Practica {
 	// Constante que define los kilometros que tiene cada etapa.
 	private static final double[] etapas = { 74.12, 63.89, 67.37, 84.03 };
 
-	// Hecho por ?
+	// Hecho por todos
 	public static void main(String[] args) {
+		// Variables en las que guardamos tanto los tiempos como los equipos, guiandonos
+		// por la posicion.
 		ArrayList<String[]> equipos = new ArrayList<>();
 		ArrayList<double[]> tiempos = new ArrayList<>();
 
@@ -18,6 +20,7 @@ public class Practica {
 
 		boolean masEquipos = true;
 		int nEquipo = 1;
+		// Bucle principal para introducir datos
 		while (masEquipos) {
 
 			String[] equipo = new String[3];
@@ -30,10 +33,13 @@ public class Practica {
 			System.out.print("Introduce el nombre del segundo componente: ");
 			equipo[2] = sc.nextLine();
 
+			// Bucle para guaradr el tiempo de cada etapa.
 			for (int i = 0; i < etapas.length; i++) {
 				boolean estaBien = false;
 				do {
 					System.out.print("Introduce el tiempo de la etapa " + (i + 1) + ": ");
+					// Utilizamos un try catch para asegurarnos de que el valor introducido sea un
+					// double.
 					try {
 						double valor = Double.parseDouble(sc.nextLine());
 						tiempoEquipo[i] = valor;
@@ -49,25 +55,33 @@ public class Practica {
 			nEquipo++;
 			System.out.print("Quieres introducir otro equipo? (y/n): ");
 
+			// Si el usuario introduce n, deja de introducir valores. Si le da enter, por
+			// defecto te pide otro equipo.
 			if (sc.nextLine().toLowerCase().equals("n"))
 				masEquipos = false;
 		}
 
+		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
 
 		System.out.println("Los 3 primeros equipos son: ");
 		{
 			int equiposSize = equiposClasificados.size();
+			// Utilizamos un operador ternario para decidir cuantas posiciones se van a
+			// mostrar, ya que si hay menos de 3 equipos, nos daria error el programa.
 			int max = equiposSize < 3 ? equiposSize : 3;
 
 			for (int i = 0; i < max; i++) {
 				String[] equipo = equiposClasificados.get(i);
 				double kmh = calcularKmhEquipo(tiempos.get(equipos.indexOf(equipo)));
+				// Muestra los tres primeros clasificados
 				System.out.println("El equipo en la posicion " + (i + 1) + " es " + equipo[0]
 						+ " con una velocidad media de " + redondearDecimales(kmh, 2) + "km/h");
 			}
 		}
 
+		// Esta variable invoca al metodo y guarda el indice del equipo ganador en la
+		// etapa en la que se encuentra.
 		int[] indices = corredorMasRapidoPorEtapa(tiempos);
 		for (int i = 0; i < indices.length; i++) {
 			System.out.println(
@@ -156,32 +170,47 @@ public class Practica {
 		return equiposOrdenados;
 	}
 
-	// Hecho por ?
+	// Hecho por David
 	private static double calcularKmh(double k, double h) {
+		// Dividimos los km entre las horas que hayamos seleccionado
 		return k / h;
 	}
 
-	// Hecho por ?
+	// Hecho por Juan
 	private static double calcularKmhEquipo(double[] tiempoEquipo) {
+		// Utilizamos stream para iterar todos los elementos del array, y con el metodo
+		// sum, sumamos todos los valores en la misma variable
 		double kmhTotal = Arrays.stream(etapas).sum();
 		double tiempoTotal = Arrays.stream(tiempoEquipo).sum();
+		// Devolvemos el metodo para calcular los kmh totales.
 		return calcularKmh(kmhTotal, tiempoTotal);
 	}
 
-	// Hecho por ?
+	// Hecho por Pedro
+	// Pasamos de primer parametro el numero que queremos devolver redondeado, y de
+	// segundo parametro, la cantidad de decimales que queramos mostrar.
 	private static double redondearDecimales(double n, int cantidad) {
+		// Hace la potencia de 10, elevado a la cantidad de decimales.
 		double decimales = Math.pow(10.0, cantidad);
-
+		// Devuelve el redondeo de numeros.
 		return Math.round(n * decimales) / decimales;
 	}
 
-	// Hecho por ?
+	// Hecho por David y Jorge
 	public static int[] corredorMasRapidoPorEtapa(ArrayList<double[]> tiempos) {
+		// Creamos un array con la cantidad de posiciones como etapas haya.
 		int[] indices = new int[etapas.length];
+		// Iteramos cada etapa
 		for (int i = 0; i < etapas.length; i++) {
+			// Guardamos el valor maximo de doble, que despues se reemplazara por el menos
+			// tiempo de la etapa.
 			double minTiempo = Double.MAX_VALUE;
+			// Guardamos el indice del equipo con el menor tiempo de la etapa
 			int minIndex = -1;
+			// Iteramos todos los tiempos guardados.
 			for (int j = 0; j < tiempos.size(); j++) {
+				// Verificamos si el tiempo de la etapa y de la posicion del tiempo del equipo
+				// en esa etapa es menor al minTiempo.
 				if (tiempos.get(j)[i] < minTiempo) {
 					minTiempo = tiempos.get(j)[i];
 					minIndex = j;
@@ -192,7 +221,9 @@ public class Practica {
 		return indices;
 	}
 
-	// Hecho por ?
+	// Hecho por Jorge y Pedro
+	// Calcula la media de un array de numeros, que en este caso utilizamos para
+	// calcular la media de los tiempos.
 	private static double calcularMedia(double[] tiempos) {
 		double sum = 0;
 		for (double tiempo : tiempos) {
