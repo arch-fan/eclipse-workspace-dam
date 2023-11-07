@@ -93,41 +93,6 @@ public class Practica {
 		sc.close();
 	}
 
-	// Datos de ejemplo
-	/*
-	 * public static void apuntarComponentes(ArrayList<String[]> equipos,
-	 * ArrayList<double[]> tiempos) { equipos.add(new String[] { "Gustavo Runners",
-	 * "Marta Diaz", "Peter" }); tiempos.add(new double[] { 5.50, 4.30, 4.50, 6.30
-	 * });
-	 *
-	 * equipos.add(new String[] { "Luisa Speedsters", "Carlos Perez", "Anna" });
-	 * tiempos.add(new double[] { 6.20, 5.10, 4.90, 7.00 });
-	 *
-	 * equipos.add(new String[] { "Juan Sprinters", "Elena Rodriguez", "Carlos" });
-	 * tiempos.add(new double[] { 5.80, 4.70, 4.60, 6.50 });
-	 *
-	 * equipos.add(new String[] { "Laura Racers", "David Gomez", "Emma" });
-	 * tiempos.add(new double[] { 5.90, 4.60, 4.70, 6.70 });
-	 *
-	 * equipos.add(new String[] { "Roberto Blazers", "Sara Gonzalez", "Michael" });
-	 * tiempos.add(new double[] { 5.70, 4.40, 4.80, 6.90 });
-	 *
-	 * equipos.add(new String[] { "Diego Sprinters", "Olivia Smith", "Lucas" });
-	 * tiempos.add(new double[] { 6.00, 4.50, 4.60, 6.80 });
-	 *
-	 * equipos.add(new String[] { "Maria Rushers", "Juan Martinez", "Sophia" });
-	 * tiempos.add(new double[] { 5.60, 4.80, 4.90, 6.60 });
-	 *
-	 * equipos.add(new String[] { "Daniel Racers", "Paula Ruiz", "Liam" });
-	 * tiempos.add(new double[] { 5.50, 4.90, 4.60, 6.40 });
-	 *
-	 * equipos.add(new String[] { "Natalia Blazers", "Hector Sanchez", "Isabella"
-	 * }); tiempos.add(new double[] { 5.80, 4.70, 4.70, 6.30 });
-	 *
-	 * equipos.add(new String[] { "Pablo Speedsters", "Eva Hernandez", "Noah" });
-	 * tiempos.add(new double[] { 6.10, 5.00, 4.80, 6.20 }); // }
-	 */
-
 	// Devuelve la lista de todos los equipos de manera ordenada por tiempo.
 	// Hecho por Juan
 	private static ArrayList<String[]> clasificarEquipos(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
