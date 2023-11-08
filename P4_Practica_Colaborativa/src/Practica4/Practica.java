@@ -82,15 +82,7 @@ public class Practica {
 			}
 		}
 
-		// Esta variable invoca al metodo y guarda el indice del equipo ganador en la
-		// etapa en la que se encuentra.
-		int[] indices = corredorMasRapidoPorEtapa(tiempos);
-		for (int i = 0; i < indices.length; i++) {
-			System.out.println(
-					"El corredor más rápido en la etapa " + (i + 1) + " es " + equipos.get(indices[i])[i % 2 + 1]
-							+ " del equipo " + equipos.get(indices[i])[0] + " con una velocidad media de "
-							+ redondearDecimales(calcularKmh(etapas[i], tiempos.get(indices[i])[i]), 2) + " km/h.");
-		}
+		corredorMasRapidoPorEtapa(equipos, tiempos);
 
 //		sc.close();
 	}
@@ -117,14 +109,16 @@ public class Practica {
 		equipos.add(new String[] { "Maria Rushers", "Juan Martinez", "Sophia" });
 		tiempos.add(new double[] { 5.60, 4.80, 4.90, 6.60 });
 
+		// Equipo con bici electrica
 		equipos.add(new String[] { "Daniel Racers", "Paula Ruiz", "Liam" });
-		tiempos.add(new double[] { 5.50, 4.90, 4.60, 6.40, 6.00, 4.50, 4.60, 6.80 });
+		tiempos.add(new double[] { 5.50, 4.90, 4.60, 6.40, 2.00, 4.50, 4.60, 6.80 });
 
 		equipos.add(new String[] { "Natalia Blazers", "Hector Sanchez", "Isabella" });
-		tiempos.add(new double[] { 5.80, 4.70, 4.70, 6.30 });
+		tiempos.add(new double[] { 5.80, 1.10, 1.30, 6.30 });
 
+		// Equipo con bici electrica
 		equipos.add(new String[] { "Pablo Speedsters", "Eva Hernandez", "Noah" });
-		tiempos.add(new double[] { 6.10, 5.00, 4.80, 1.20, 5.50, 1.30, 1.50, 10.30 });
+		tiempos.add(new double[] { 4.10, 5.00, 4.00, 6.20, 3.50, 1.30, 1.50, 1.0 });
 
 	}
 
@@ -200,14 +194,36 @@ public class Practica {
 		return Math.round(n * decimales) / decimales;
 	}
 
-	// Hecho por David y Jorge
-//	public static String corredorMasRapidoPorEtapa(ArrayList<double[]> tiempos, int nEtapa) {
-//		double etapa = etapas[nEtapa];
-////		for(int i = 0; i < ) {
-////			
-////		}
-//	}
+	public static void corredorMasRapidoPorEtapa(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
+		for (int i = 0; i < etapas.length; i++) {
+			double mejorTiempo = Double.MAX_VALUE;
+			String mejorParticipante = "";
 
+			for (int g = 0; g < tiempos.size(); g++) {
+				double[] tiempo = tiempos.get(g);
+				
+				if (tiempo.length > 4) {
+					if(tiempo[i] < mejorTiempo) {
+						mejorTiempo = tiempo[i];
+						mejorParticipante = equipos.get(g)[1];
+					}
+					if(tiempo[i+4] < mejorTiempo) {
+						mejorTiempo = tiempo[i+4];
+						mejorParticipante = equipos.get(g)[2];
+					}
+				} else {
+					if (tiempo[i] < mejorTiempo) {
+						mejorTiempo = tiempo[i];
+						mejorParticipante = equipos.get(g)[i % 2 + 1];
+					}
+				}
+			}
+
+			double velocidadMedia = redondearDecimales(calcularKmh(etapas[i], mejorTiempo), 2);
+			System.out.println("Etapa " + i + 1 + " el participante mas rapido es " + mejorParticipante
+					+ " con una velocidad media de " + velocidadMedia + " km/h");
+		}
+	}
 
 	// Hecho por Jorge y Pedro
 	// Calcula la media de un array de numeros, que en este caso utilizamos para
