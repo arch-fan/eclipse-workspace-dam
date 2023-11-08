@@ -16,53 +16,9 @@ public class Practica {
 		ArrayList<String[]> equipos = new ArrayList<>();
 		ArrayList<double[]> tiempos = new ArrayList<>();
 
-		apuntarComponentes(equipos, tiempos);
-
-//		Scanner sc = new Scanner(System.in);
-//
-//		boolean masEquipos = true;
-//		int nEquipo = 1;
-//		// Bucle principal para introducir datos
-//		while (masEquipos) {
-//
-//			String[] equipo = new String[3];
-//			double[] tiempoEquipo = new double[etapas.length];
-//
-//			System.out.print("Introduce el nombre del equipo " + nEquipo + ": ");
-//			equipo[0] = sc.nextLine();
-//			System.out.print("Introduce el nombre del primer componente: ");
-//			equipo[1] = sc.nextLine();
-//			System.out.print("Introduce el nombre del segundo componente: ");
-//			equipo[2] = sc.nextLine();
-//
-//			// Bucle para guaradr el tiempo de cada etapa.
-//			for (int i = 0; i < etapas.length; i++) {
-//				boolean estaBien = false;
-//				do {
-//					System.out.print("Introduce el tiempo de la etapa " + (i + 1) + ": ");
-//					// Utilizamos un try catch para asegurarnos de que el valor introducido sea un
-//					// double.
-//					try {
-//						double valor = Double.parseDouble(sc.nextLine());
-//						tiempoEquipo[i] = valor;
-//						estaBien = true;
-//					} catch (NumberFormatException e) {
-//						System.out.println("Introduce un valor correcto!!");
-//					}
-//				} while (!estaBien);
-//			}
-//
-//			equipos.add(equipo);
-//			tiempos.add(tiempoEquipo);
-//			nEquipo++;
-//			System.out.print("Quieres introducir otro equipo? (y/n): ");
-//
-//			// Si el usuario introduce n, deja de introducir valores. Si le da enter, por
-//			// defecto te pide otro equipo.
-//			if (sc.nextLine().toLowerCase().equals("n"))
-//				masEquipos = false;
-//		}
-
+		apuntarComponentesEjemplo(equipos, tiempos);
+//		apuntarComponentes(equipos, tiempos);
+		
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
 
@@ -84,10 +40,9 @@ public class Practica {
 
 		corredorMasRapidoPorEtapa(equipos, tiempos);
 
-//		sc.close();
 	}
 
-	public static void apuntarComponentes(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
+	public static void apuntarComponentesEjemplo(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
 		equipos.add(new String[] { "Gustavo Runners", "Marta Diaz", "Peter" });
 		tiempos.add(new double[] { 5.50, 4.30, 4.50, 6.30 });
 
@@ -122,6 +77,56 @@ public class Practica {
 
 	}
 
+	public static void apuntarComponentes(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
+
+		Scanner sc = new Scanner(System.in);
+		
+		boolean masEquipos = true;
+		int nEquipo = 1;
+		// Bucle principal para introducir datos
+		while (masEquipos) {
+
+			String[] equipo = new String[3];
+			double[] tiempoEquipo = new double[etapas.length];
+
+			System.out.print("Introduce el nombre del equipo " + nEquipo + ": ");
+			equipo[0] = sc.nextLine();
+			System.out.print("Introduce el nombre del primer componente: ");
+			equipo[1] = sc.nextLine();
+			System.out.print("Introduce el nombre del segundo componente: ");
+			equipo[2] = sc.nextLine();
+
+			// Bucle para guaradr el tiempo de cada etapa.
+			for (int i = 0; i < etapas.length; i++) {
+				boolean estaBien = false;
+				do {
+					System.out.print("Introduce el tiempo de la etapa " + (i + 1) + ": ");
+					// Utilizamos un try catch para asegurarnos de que el valor introducido sea un
+					// double.
+					try {
+						double valor = Double.parseDouble(sc.nextLine());
+						tiempoEquipo[i] = valor;
+						estaBien = true;
+					} catch (NumberFormatException e) {
+						System.out.println("Introduce un valor correcto!!");
+					}
+				} while (!estaBien);
+			}
+
+			equipos.add(equipo);
+			tiempos.add(tiempoEquipo);
+			nEquipo++;
+			System.out.print("Quieres introducir otro equipo? (y/n): ");
+
+			// Si el usuario introduce n, deja de introducir valores. Si le da enter, por
+			// defecto te pide otro equipo.
+			if (sc.nextLine().toLowerCase().equals("n"))
+				masEquipos = false;
+		}
+		
+		sc.close();
+	}
+	
 	// Devuelve la lista de todos los equipos de manera ordenada por tiempo.
 	// Hecho por Juan
 	private static ArrayList<String[]> clasificarEquipos(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
@@ -193,7 +198,7 @@ public class Practica {
 		// Devuelve el redondeo de numeros.
 		return Math.round(n * decimales) / decimales;
 	}
-
+	
 	public static void corredorMasRapidoPorEtapa(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
 		for (int i = 0; i < etapas.length; i++) {
 			double mejorTiempo = Double.MAX_VALUE;
@@ -202,13 +207,13 @@ public class Practica {
 			for (int g = 0; g < tiempos.size(); g++) {
 				double[] tiempo = tiempos.get(g);
 				
-				if (tiempo.length > 4) {
+				if (tiempo.length > etapas.length) {
 					if(tiempo[i] < mejorTiempo) {
 						mejorTiempo = tiempo[i];
 						mejorParticipante = equipos.get(g)[1];
 					}
-					if(tiempo[i+4] < mejorTiempo) {
-						mejorTiempo = tiempo[i+4];
+					if(tiempo[i+etapas.length] < mejorTiempo) {
+						mejorTiempo = tiempo[i+etapas.length];
 						mejorParticipante = equipos.get(g)[2];
 					}
 				} else {
@@ -220,7 +225,7 @@ public class Practica {
 			}
 
 			double velocidadMedia = redondearDecimales(calcularKmh(etapas[i], mejorTiempo), 2);
-			System.out.println("Etapa " + i + 1 + " el participante mas rapido es " + mejorParticipante
+			System.out.println("Etapa " + (i + 1) + ": el participante mas rapido es " + mejorParticipante
 					+ " con una velocidad media de " + velocidadMedia + " km/h");
 		}
 	}
