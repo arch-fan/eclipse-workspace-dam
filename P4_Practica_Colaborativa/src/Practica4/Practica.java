@@ -16,8 +16,8 @@ public class Practica {
 		ArrayList<String[]> equipos = new ArrayList<>();
 		ArrayList<double[]> tiempos = new ArrayList<>();
 
-		apuntarComponentesEjemplo(equipos, tiempos);
-//		apuntarComponentes(equipos, tiempos);
+//		apuntarComponentesEjemplo(equipos, tiempos);
+		apuntarComponentes(equipos, tiempos);
 		
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
@@ -38,6 +38,7 @@ public class Practica {
 			}
 		}
 
+		// Llamamos al metodo para imprimir el corredor mas rapido por etapa
 		corredorMasRapidoPorEtapa(equipos, tiempos);
 
 	}
@@ -77,6 +78,8 @@ public class Practica {
 
 	}
 
+	// Hecho por todos
+	// Metodo para recoger la entrada del usuario y añadirlos al array de datos
 	public static void apuntarComponentes(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
 
 		Scanner sc = new Scanner(System.in);
@@ -175,14 +178,14 @@ public class Practica {
 		return k / h;
 	}
 
-	// Hecho por Juan
+	// Hecho por Jorge
 	private static double calcularKmhEquipo(double[] tiempoEquipo) {
 		// Utilizamos stream para iterar todos los elementos del array, y con el metodo
 		// sum, sumamos todos los valores en la misma variable
 		double kmhTotal = Arrays.stream(etapas).sum();
 		double tiempoTotal = Arrays.stream(tiempoEquipo).sum();
 		// Devolvemos el metodo para calcular los kmh totales.
-		if (tiempoEquipo.length > 4) {
+		if (tiempoEquipo.length > etapas.length){
 			return calcularKmh(kmhTotal, tiempoTotal / 2);
 		} else {
 			return calcularKmh(kmhTotal, tiempoTotal);
@@ -199,24 +202,35 @@ public class Practica {
 		return Math.round(n * decimales) / decimales;
 	}
 	
+	// Hecho por Juan y David
+	// Imprimir el corredor mas rapido por etapa
 	public static void corredorMasRapidoPorEtapa(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
+		// Iteramos cada etapa
 		for (int i = 0; i < etapas.length; i++) {
+			// Guardamos el mayor numero existente en double
 			double mejorTiempo = Double.MAX_VALUE;
+			// Aqui guardamos el nombre del mejor participante de la etapa
 			String mejorParticipante = "";
 
+			// Iteramos todos los registros de tiempo, ubicandonos con g
 			for (int g = 0; g < tiempos.size(); g++) {
+				// Entramos al tiempo de la iteracion
 				double[] tiempo = tiempos.get(g);
 				
+				// Comprobamos si son bicis electricas
 				if (tiempo.length > etapas.length) {
+					// Verificamos si el tiempo iterado es menor al mejor tiempo registrado
 					if(tiempo[i] < mejorTiempo) {
 						mejorTiempo = tiempo[i];
 						mejorParticipante = equipos.get(g)[1];
 					}
+					// Aqui comprobamos al segundo participante
 					if(tiempo[i+etapas.length] < mejorTiempo) {
 						mejorTiempo = tiempo[i+etapas.length];
 						mejorParticipante = equipos.get(g)[2];
 					}
 				} else {
+					// Aqui las bicis son de montaña
 					if (tiempo[i] < mejorTiempo) {
 						mejorTiempo = tiempo[i];
 						mejorParticipante = equipos.get(g)[i % 2 + 1];
@@ -224,6 +238,7 @@ public class Practica {
 				}
 			}
 
+			// Guardamos la velocidad media e imprimimos el resultado
 			double velocidadMedia = redondearDecimales(calcularKmh(etapas[i], mejorTiempo), 2);
 			System.out.println("Etapa " + (i + 1) + ": el participante mas rapido es " + mejorParticipante
 					+ " con una velocidad media de " + velocidadMedia + " km/h");
