@@ -18,7 +18,7 @@ public class Practica {
 
 //		apuntarComponentesEjemplo(equipos, tiempos);
 		apuntarComponentes(equipos, tiempos);
-		
+
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
 
@@ -83,14 +83,22 @@ public class Practica {
 	public static void apuntarComponentes(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
 
 		Scanner sc = new Scanner(System.in);
-		
+
+		System.out.println("¡Bienvenido! Vamos a empezar a introducir datos de los ciclistas.");
+
 		boolean masEquipos = true;
 		int nEquipo = 1;
 		// Bucle principal para introducir datos
 		while (masEquipos) {
 
 			String[] equipo = new String[3];
-			double[] tiempoEquipo = new double[etapas.length];
+
+			System.out.print("Equipo " + (nEquipo) + " ¿Utilizas bicicletas electricas? (y/n): ");
+			boolean bElectricas = sc.nextLine().toLowerCase().equals("y") ? true : false;
+
+			int cantidadEtapas = bElectricas ? etapas.length * 2 : etapas.length;
+
+			double[] tiempoEquipo = new double[cantidadEtapas];
 
 			System.out.print("Introduce el nombre del equipo " + nEquipo + ": ");
 			equipo[0] = sc.nextLine();
@@ -99,8 +107,8 @@ public class Practica {
 			System.out.print("Introduce el nombre del segundo componente: ");
 			equipo[2] = sc.nextLine();
 
-			// Bucle para guaradr el tiempo de cada etapa.
-			for (int i = 0; i < etapas.length; i++) {
+			// Bucle para guardar el tiempo de cada etapa.
+			for (int i = 0; i < cantidadEtapas; i++) {
 				boolean estaBien = false;
 				do {
 					System.out.print("Introduce el tiempo de la etapa " + (i + 1) + ": ");
@@ -126,10 +134,10 @@ public class Practica {
 			if (sc.nextLine().toLowerCase().equals("n"))
 				masEquipos = false;
 		}
-		
+
 		sc.close();
 	}
-	
+
 	// Devuelve la lista de todos los equipos de manera ordenada por tiempo.
 	// Hecho por Juan
 	private static ArrayList<String[]> clasificarEquipos(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
@@ -185,7 +193,7 @@ public class Practica {
 		double kmhTotal = Arrays.stream(etapas).sum();
 		double tiempoTotal = Arrays.stream(tiempoEquipo).sum();
 		// Devolvemos el metodo para calcular los kmh totales.
-		if (tiempoEquipo.length > etapas.length){
+		if (tiempoEquipo.length > etapas.length) {
 			return calcularKmh(kmhTotal, tiempoTotal / 2);
 		} else {
 			return calcularKmh(kmhTotal, tiempoTotal);
@@ -201,7 +209,7 @@ public class Practica {
 		// Devuelve el redondeo de numeros.
 		return Math.round(n * decimales) / decimales;
 	}
-	
+
 	// Hecho por Juan y David
 	// Imprimir el corredor mas rapido por etapa
 	public static void corredorMasRapidoPorEtapa(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
@@ -216,17 +224,17 @@ public class Practica {
 			for (int g = 0; g < tiempos.size(); g++) {
 				// Entramos al tiempo de la iteracion
 				double[] tiempo = tiempos.get(g);
-				
+
 				// Comprobamos si son bicis electricas
 				if (tiempo.length > etapas.length) {
 					// Verificamos si el tiempo iterado es menor al mejor tiempo registrado
-					if(tiempo[i] < mejorTiempo) {
+					if (tiempo[i] < mejorTiempo) {
 						mejorTiempo = tiempo[i];
 						mejorParticipante = equipos.get(g)[1];
 					}
 					// Aqui comprobamos al segundo participante
-					if(tiempo[i+etapas.length] < mejorTiempo) {
-						mejorTiempo = tiempo[i+etapas.length];
+					if (tiempo[i + etapas.length] < mejorTiempo) {
+						mejorTiempo = tiempo[i + etapas.length];
 						mejorParticipante = equipos.get(g)[2];
 					}
 				} else {
