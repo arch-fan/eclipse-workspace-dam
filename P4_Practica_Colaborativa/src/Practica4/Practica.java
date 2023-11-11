@@ -10,19 +10,18 @@ public class Practica {
 	// Constante que define los kilometros que tiene cada etapa.
 	private static final double[] etapas = { 74.12, 63.89, 67.37, 84.03 };
 
-	// Hecho por todos
 	public static void main(String[] args) {
 		// Variables en las que guardamos tanto los tiempos como los equipos, guiandonos
 		// por la posicion.
 		ArrayList<String[]> equipos = new ArrayList<>();
 		ArrayList<double[]> tiempos = new ArrayList<>();
 
-		apuntarComponentesEjemplo(equipos, tiempos);
-//		apuntarComponentes(equipos, tiempos);
+//		apuntarComponentesEjemplo(equipos, tiempos);
+		apuntarComponentes(equipos, tiempos);
 
-		int[] equiposAeliminar = encontrarEquipoConCorredorMasLentoPorEtapa(equipos, tiempos);
-		eliminarEquipos(equiposAeliminar, equipos, tiempos);
-		
+		int[] equiposLentos = identificarEquiposLentos(equipos, tiempos);
+		eliminarEquipos(equiposLentos, equipos, tiempos);
+
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
 
@@ -81,7 +80,6 @@ public class Practica {
 
 	}
 
-	// Hecho por todos
 	// Metodo para recoger la entrada del usuario y añadirlos al array de datos
 	public static void apuntarComponentes(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
 
@@ -183,13 +181,11 @@ public class Practica {
 		return equiposOrdenados;
 	}
 
-	// Hecho por David
 	private static double calcularKmh(double k, double h) {
 		// Dividimos los km entre las horas que hayamos seleccionado
 		return k / h;
 	}
 
-	// Hecho por Jorge
 	private static double calcularKmhEquipo(double[] tiempoEquipo) {
 		// Utilizamos stream para iterar todos los elementos del array, y con el metodo
 		// sum, sumamos todos los valores en la misma variable
@@ -213,7 +209,6 @@ public class Practica {
 		return Math.round(n * decimales) / decimales;
 	}
 
-	// Hecho por Juan y David
 	// Imprimir el corredor mas rapido por etapa
 	public static void corredorMasRapidoPorEtapa(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
 		// Iteramos cada etapa
@@ -256,7 +251,6 @@ public class Practica {
 		}
 	}
 
-	// Hecho por Jorge y Pedro
 	// Calcula la media de un array de numeros, que en este caso utilizamos para
 	// calcular la media de los tiempos.
 	private static double calcularMedia(double[] tiempos) {
@@ -267,21 +261,22 @@ public class Practica {
 		return sum / tiempos.length;
 	}
 
-	public static int[] encontrarEquipoConCorredorMasLentoPorEtapa(ArrayList<String[]> equipos,
-			ArrayList<double[]> tiempos) {
-		int[] equiposMasLentos = new int[etapas.length]; // Array para guardar índices de los equipos más lentos en cada
-															// etapa
+	public static int[] identificarEquiposLentos(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
+		// Array para almacenar los índices de los equipos con el corredor más lento en
+		// cada etapa.
+		int[] equiposMasLentos = new int[etapas.length];
 
-		// Iteramos cada etapa
+		// Recorremos cada etapa para determinar el equipo más lento.
 		for (int i = 0; i < etapas.length; i++) {
 			double peorTiempo = 0;
 			int equipoLento = 0;
 
-			// Iteramos todos los registros de tiempo
+			// Iteramos sobre cada equipo para encontrar el más lento en la etapa actual.
 			for (int g = 0; g < tiempos.size(); g++) {
 				double[] tiempo = tiempos.get(g);
 
-				// Si el equipo usa bicis eléctricas, se compara cada tiempo individualmente
+				// Si el equipo usa bicicletas eléctricas, comparamos cada tiempo de manera
+				// individual.
 				if (tiempo.length > etapas.length) {
 					if (tiempo[i] > peorTiempo) {
 						peorTiempo = tiempo[i];
@@ -292,45 +287,57 @@ public class Practica {
 						equipoLento = g;
 					}
 				} else {
-					// Para equipos con bicis normales
+					// Para equipos con bicicletas convencionales.
 					if (tiempo[i] > peorTiempo) {
 						peorTiempo = tiempo[i];
 						equipoLento = g;
 					}
 				}
 			}
+			// Guardamos el índice del equipo más lento en la etapa actual.
 			equiposMasLentos[i] = equipoLento;
 		}
 		return equiposMasLentos;
 	}
 
-	public static void eliminarEquipos(int[] equiposAeliminar, ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
+	public static void eliminarEquipos(int[] equiposAeliminar, ArrayList<String[]> equipos,
+			ArrayList<double[]> tiempos) {
+		// Lista para guardar los números de equipos que aparecen repetidos en la lista
+		// de equipos a eliminar.
 		ArrayList<Integer> repeatedNumbers = new ArrayList<>();
 
-        for (int i = 0; i < equiposAeliminar.length; i++) {
-            int count = 0;
-            for (int j = 0; j < equiposAeliminar.length; j++) {
-                if (equiposAeliminar[i] == equiposAeliminar[j]) {
-                    count++;
-                }
-            }
-            if (count >= 2 && !repeatedNumbers.contains(equiposAeliminar[i])) {
-                repeatedNumbers.add(equiposAeliminar[i]);
-            }
-        }
-        
-        Collections.sort(repeatedNumbers);
-        
-        int pQuitadas = 0;
-        for (int n : repeatedNumbers) {
-            int adjustedIndex = n - pQuitadas;
-            if (adjustedIndex >= 0 && adjustedIndex < equipos.size()) {
-                equipos.remove(adjustedIndex);
-                tiempos.remove(adjustedIndex);
-                pQuitadas++;
-                System.out.println("Se ha quitado el equipo " + n + " por tener 2 corredores demasiado lentos");
-            }
-        }
-        
+		// Recorremos la lista de equipos a eliminar para identificar números repetidos.
+		for (int i = 0; i < equiposAeliminar.length; i++) {
+			int count = 0;
+			for (int j = 0; j < equiposAeliminar.length; j++) {
+				if (equiposAeliminar[i] == equiposAeliminar[j]) {
+					count++;
+				}
+			}
+			// Si un número aparece al menos dos veces y aún no está en la lista de
+			// repetidos, lo añadimos.
+			if (count >= 2 && !repeatedNumbers.contains(equiposAeliminar[i])) {
+				repeatedNumbers.add(equiposAeliminar[i]);
+			}
+		}
+
+		// Ordenamos la lista de números repetidos.
+		Collections.sort(repeatedNumbers);
+
+		// Variable para ajustar el índice del equipo a eliminar debido a la reducción
+		// del tamaño de la lista.
+		int pQuitadas = 0;
+		// Eliminamos los equipos de la lista según los índices ajustados.
+		for (int n : repeatedNumbers) {
+			int adjustedIndex = n - pQuitadas;
+			if (adjustedIndex >= 0 && adjustedIndex < equipos.size()) {
+				equipos.remove(adjustedIndex);
+				tiempos.remove(adjustedIndex);
+				pQuitadas++;
+				// Imprimimos un mensaje notificando la eliminación del equipo.
+				System.out.println("Se ha eliminado al equipo " + n + " por tener 2 corredores demasiado lentos");
+			}
+		}
+
 	}
 }
