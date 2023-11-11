@@ -16,8 +16,8 @@ public class Practica {
 		ArrayList<String[]> equipos = new ArrayList<>();
 		ArrayList<double[]> tiempos = new ArrayList<>();
 
-		apuntarComponentesEjemplo(equipos, tiempos);
-		// apuntarComponentes(equipos, tiempos);
+//		apuntarComponentesEjemplo(equipos, tiempos);
+		apuntarComponentes(equipos, tiempos);
 
 		System.out.print("\n");
 		int[] equiposLentos = identificarEquiposLentos(equipos, tiempos);
