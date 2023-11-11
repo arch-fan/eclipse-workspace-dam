@@ -16,16 +16,17 @@ public class Practica {
 		ArrayList<String[]> equipos = new ArrayList<>();
 		ArrayList<double[]> tiempos = new ArrayList<>();
 
-//		apuntarComponentesEjemplo(equipos, tiempos);
-		apuntarComponentes(equipos, tiempos);
+		apuntarComponentesEjemplo(equipos, tiempos);
+		// apuntarComponentes(equipos, tiempos);
 
+		System.out.print("\n");
 		int[] equiposLentos = identificarEquiposLentos(equipos, tiempos);
 		eliminarEquipos(equiposLentos, equipos, tiempos);
 
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
 
-		System.out.println("Los 3 primeros equipos son: ");
+		System.out.println("\nLos 3 primeros equipos son: ");
 		{
 			int equiposSize = equiposClasificados.size();
 			// Utilizamos un operador ternario para decidir cuantas posiciones se van a
@@ -36,12 +37,13 @@ public class Practica {
 				String[] equipo = equiposClasificados.get(i);
 				double kmh = calcularKmhEquipo(tiempos.get(equipos.indexOf(equipo)));
 				// Muestra los tres primeros clasificados
-				System.out.println("El equipo en la posicion " + (i + 1) + " es " + equipo[0]
+				System.out.println("  - El equipo en la posicion " + (i + 1) + " es " + equipo[0]
 						+ " con una velocidad media de " + redondearDecimales(kmh, 2) + " km/h");
 			}
 		}
 
 		// Llamamos al metodo para imprimir el corredor mas rapido por etapa
+		System.out.println("\nLos participantes mas rapidos por etapas son: ");
 		corredorMasRapidoPorEtapa(equipos, tiempos);
 	}
 
@@ -80,72 +82,82 @@ public class Practica {
 
 	}
 
-	// Metodo para recoger la entrada del usuario y añadirlos al array de datos
+	// Metodo para recoger la entrada del usuario y anadirlos al array de datos
 	public static void apuntarComponentes(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
-
 		Scanner sc = new Scanner(System.in);
+		System.out.println("¡Bienvenido al registro de equipos de ciclismo!");
 
-		System.out.println("¡Bienvenido! Vamos a empezar a introducir datos de los ciclistas.");
+		boolean masEquipos = true; // Controla si se desea continuar anadiendo equipos.
+		int numeroDeEquipo = 1; // Contador para asignar un numero a cada equipo.
 
-		boolean masEquipos = true;
-		int nEquipo = 1;
-		// Bucle principal para introducir datos
+		String respuesta; // Variable para almacenar respuestas del usuario.
 		while (masEquipos) {
+			// Informacion del equipo
+			String[] equipo = new String[3]; // Array para almacenar los datos de un equipo.
+			System.out.print("\nNombre del equipo " + numeroDeEquipo + ": ");
+			equipo[0] = sc.nextLine(); // Almacena el nombre del equipo.
 
-			String[] equipo = new String[3];
+			// Verificacion de bicicletas electricas
+			boolean bicicletasElectricas; // Indica si el equipo usa bicicletas electricas.
+			do {
+				System.out.print("El equipo " + equipo[0] + " utiliza bicicletas electricas? (s/n): ");
+				respuesta = sc.nextLine().toLowerCase();
+				bicicletasElectricas = respuesta.equals("s");
+				// Solicita al usuario confirmar si el equipo usa bicicletas electricas.
+				if (!respuesta.equals("s") && !respuesta.equals("n")) {
+					System.out.println("Por favor, introduce 's' o 'n'.");
+				}
+			} while (!respuesta.equals("s") && !respuesta.equals("n"));
 
-			System.out.print("Equipo " + (nEquipo) + " ¿Utilizas bicicletas electricas? (y/n): ");
-			boolean bElectricas = sc.nextLine().toLowerCase().equals("y") ? true : false;
+			// Calculo del tiempo
+			int cantidadEtapas = bicicletasElectricas ? 4 : 2; // Determina la cantidad de etapas segun el tipo de
+																// bicicleta.
+			double[] tiempoEquipo = new double[cantidadEtapas * 2]; // Array para almacenar tiempos del equipo (dos
+																	// ciclistas).
 
-			int cantidadEtapas = bElectricas ? etapas.length * 2 : etapas.length;
+			for (int ciclista = 1; ciclista <= 2; ciclista++) {
+				// Registro de los nombres de los ciclistas y sus tiempos en cada etapa.
+				System.out.print("\nIntroduce el nombre del " + (ciclista == 1 ? "primer" : "segundo") + " ciclista: ");
+				equipo[ciclista] = sc.nextLine();
 
-			double[] tiempoEquipo = new double[cantidadEtapas];
-
-			System.out.print("Introduce el nombre del equipo " + nEquipo + ": ");
-			equipo[0] = sc.nextLine();
-			System.out.print("Introduce el nombre del primer componente: ");
-			equipo[1] = sc.nextLine();
-			System.out.print("Introduce el nombre del segundo componente: ");
-			equipo[2] = sc.nextLine();
-
-			// Bucle para guardar el tiempo de cada etapa.
-			for (int i = 0; i < cantidadEtapas; i++) {
-				boolean estaBien = false;
-				do {
-					System.out.print("Introduce el tiempo de la etapa " + (i + 1) + ": ");
-					// Utilizamos un try catch para asegurarnos de que el valor introducido sea un
-					// double.
-					try {
-						double valor = Double.parseDouble(sc.nextLine());
-						tiempoEquipo[i] = valor;
-						estaBien = true;
-					} catch (NumberFormatException e) {
-						System.out.println("Introduce un valor correcto!!");
+				for (int etapa = 0; etapa < cantidadEtapas; etapa++) {
+					while (true) {
+						// Recuperamos y validamos la entrada de tiempo de los usuarios
+						try {
+							System.out.print("Introduce el tiempo de la etapa " + (etapa + 1) + " para "
+									+ equipo[ciclista] + ": ");
+							tiempoEquipo[(ciclista - 1) * cantidadEtapas + etapa] = Double.parseDouble(sc.nextLine());
+							break; // Sale del bucle una vez se obtiene un valor valido.
+						} catch (NumberFormatException e) {
+							// Maneja la excepcion en caso de introducir un valor no numerico.
+							System.out.println("Introduce un valor correcto!!");
+						}
 					}
-				} while (!estaBien);
+				}
 			}
 
+			// Anade los datos del equipo y sus tiempos a las listas correspondientes.
 			equipos.add(equipo);
 			tiempos.add(tiempoEquipo);
-			nEquipo++;
-			System.out.print("Quieres introducir otro equipo? (y/n): ");
+			numeroDeEquipo++; // Incrementa el contador de equipos.
 
-			// Si el usuario introduce n, deja de introducir valores. Si le da enter, por
-			// defecto te pide otro equipo.
-			if (sc.nextLine().toLowerCase().equals("n"))
-				masEquipos = false;
+			// Pregunta para anadir mas equipos
+			if (equipos.size() >= 2) {
+				System.out.print("\n¿Quieres introducir otro equipo? (s/n): ");
+				masEquipos = sc.nextLine().toLowerCase().equals("s"); // Determina si se continua con la adicion de
+																		// equipos.
+			}
 		}
 
-		sc.close();
+		sc.close(); // Cierra el Scanner para liberar recursos.
 	}
 
 	// Devuelve la lista de todos los equipos de manera ordenada por tiempo.
-	// Hecho por Juan
 	private static ArrayList<String[]> clasificarEquipos(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
 		// Primero, clonamos el ArrayLisy de los equipos, ya que lo vamos a mutar.
 		ArrayList<String[]> equiposOrdenados = new ArrayList<>(equipos);
 		/*
-		 * Aquí utilizamos el metodo sort, el cual utiliza el algoritmo Quicksort para
+		 * Aqui utilizamos el metodo sort, el cual utiliza el algoritmo Quicksort para
 		 * ordenar elementos. https://es.wikipedia.org/wiki/Quicksort
 		 * 
 		 * El metodo de implementacion que tiene Java para este metodo es la posibilidad
@@ -160,7 +172,7 @@ public class Practica {
 		 * menor a uno, se queda en el lado izquierdo, indicando que es un valor menor
 		 * al pivote. Si lo que se devuelve es 0, el valor se queda en su posicion.
 		 * 
-		 * Aqui se escribe el metodo de una manera más simplificada:
+		 * Aqui se escribe el metodo de una manera mas simplificada:
 		 * 
 		 * equiposOrdenados.sort((e1, e2) -> {
 		 * 
@@ -199,7 +211,6 @@ public class Practica {
 		}
 	}
 
-	// Hecho por Pedro
 	// Pasamos de primer parametro el numero que queremos devolver redondeado, y de
 	// segundo parametro, la cantidad de decimales que queramos mostrar.
 	private static double redondearDecimales(double n, int cantidad) {
@@ -236,7 +247,7 @@ public class Practica {
 						mejorParticipante = equipos.get(g)[2];
 					}
 				} else {
-					// Aqui las bicis son de montaña
+					// Aqui las bicis son de montana
 					if (tiempo[i] < mejorTiempo) {
 						mejorTiempo = tiempo[i];
 						mejorParticipante = equipos.get(g)[i % 2 + 1];
@@ -246,7 +257,7 @@ public class Practica {
 
 			// Guardamos la velocidad media e imprimimos el resultado
 			double velocidadMedia = redondearDecimales(calcularKmh(etapas[i], mejorTiempo), 2);
-			System.out.println("Etapa " + (i + 1) + ": el participante mas rapido es " + mejorParticipante
+			System.out.println("  - Etapa " + (i + 1) + ": el participante mas rapido es " + mejorParticipante
 					+ " con una velocidad media de " + velocidadMedia + " km/h");
 		}
 	}
@@ -262,20 +273,20 @@ public class Practica {
 	}
 
 	public static int[] identificarEquiposLentos(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
-		// Array para almacenar los índices de los equipos con el corredor más lento en
+		// Array para almacenar los indices de los equipos con el corredor mas lento en
 		// cada etapa.
 		int[] equiposMasLentos = new int[etapas.length];
 
-		// Recorremos cada etapa para determinar el equipo más lento.
+		// Recorremos cada etapa para determinar el equipo mas lento.
 		for (int i = 0; i < etapas.length; i++) {
 			double peorTiempo = 0;
 			int equipoLento = 0;
 
-			// Iteramos sobre cada equipo para encontrar el más lento en la etapa actual.
+			// Iteramos sobre cada equipo para encontrar el mas lento en la etapa actual.
 			for (int g = 0; g < tiempos.size(); g++) {
 				double[] tiempo = tiempos.get(g);
 
-				// Si el equipo usa bicicletas eléctricas, comparamos cada tiempo de manera
+				// Si el equipo usa bicicletas electricas, comparamos cada tiempo de manera
 				// individual.
 				if (tiempo.length > etapas.length) {
 					if (tiempo[i] > peorTiempo) {
@@ -294,7 +305,7 @@ public class Practica {
 					}
 				}
 			}
-			// Guardamos el índice del equipo más lento en la etapa actual.
+			// Guardamos el indice del equipo mas lento en la etapa actual.
 			equiposMasLentos[i] = equipoLento;
 		}
 		return equiposMasLentos;
@@ -302,11 +313,11 @@ public class Practica {
 
 	public static void eliminarEquipos(int[] equiposAeliminar, ArrayList<String[]> equipos,
 			ArrayList<double[]> tiempos) {
-		// Lista para guardar los números de equipos que aparecen repetidos en la lista
+		// Lista para guardar los numeros de equipos que aparecen repetidos en la lista
 		// de equipos a eliminar.
 		ArrayList<Integer> repeatedNumbers = new ArrayList<>();
 
-		// Recorremos la lista de equipos a eliminar para identificar números repetidos.
+		// Recorremos la lista de equipos a eliminar para identificar numeros repetidos.
 		for (int i = 0; i < equiposAeliminar.length; i++) {
 			int count = 0;
 			for (int j = 0; j < equiposAeliminar.length; j++) {
@@ -314,27 +325,27 @@ public class Practica {
 					count++;
 				}
 			}
-			// Si un número aparece al menos dos veces y aún no está en la lista de
-			// repetidos, lo añadimos.
+			// Si un numero aparece al menos dos veces y aun no esta en la lista de
+			// repetidos, lo anadimos.
 			if (count >= 2 && !repeatedNumbers.contains(equiposAeliminar[i])) {
 				repeatedNumbers.add(equiposAeliminar[i]);
 			}
 		}
 
-		// Ordenamos la lista de números repetidos.
+		// Ordenamos la lista de numeros repetidos.
 		Collections.sort(repeatedNumbers);
 
-		// Variable para ajustar el índice del equipo a eliminar debido a la reducción
-		// del tamaño de la lista.
+		// Variable para ajustar el indice del equipo a eliminar debido a la reduccion
+		// del tamano de la lista.
 		int pQuitadas = 0;
-		// Eliminamos los equipos de la lista según los índices ajustados.
+		// Eliminamos los equipos de la lista segun los indices ajustados.
 		for (int n : repeatedNumbers) {
 			int adjustedIndex = n - pQuitadas;
 			if (adjustedIndex >= 0 && adjustedIndex < equipos.size()) {
 				equipos.remove(adjustedIndex);
 				tiempos.remove(adjustedIndex);
 				pQuitadas++;
-				// Imprimimos un mensaje notificando la eliminación del equipo.
+				// Imprimimos un mensaje notificando la eliminacion del equipo.
 				System.out.println("Se ha eliminado al equipo " + n + " por tener 2 corredores demasiado lentos");
 			}
 		}
