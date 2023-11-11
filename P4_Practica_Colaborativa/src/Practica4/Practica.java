@@ -2,7 +2,6 @@ package Practica4;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Scanner;
 
 public class Practica {
@@ -20,7 +19,8 @@ public class Practica {
 		apuntarComponentes(equipos, tiempos);
 
 		System.out.print("\n");
-		int[] equiposLentos = identificarEquiposLentos(equipos, tiempos);
+
+		ArrayList<Integer[]> equiposLentos = identificarEquiposLentos(equipos, tiempos);
 		eliminarEquipos(equiposLentos, equipos, tiempos);
 
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
@@ -272,15 +272,18 @@ public class Practica {
 		return sum / tiempos.length;
 	}
 
-	public static int[] identificarEquiposLentos(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
-		// Array para almacenar los indices de los equipos con el corredor mas lento en
-		// cada etapa.
-		int[] equiposMasLentos = new int[etapas.length];
+	// Indentifica los equipos con el corredor mas lento por etapa, y lo devuelve en el formato especificado abajo.
+	public static ArrayList<Integer[]> identificarEquiposLentos(ArrayList<String[]> equipos,
+			ArrayList<double[]> tiempos) {
+		// Posicion 0 del Integer marca el indice del equipo
+		// Posicion 1 del Integer marca la posicion del corredor mas lento (1 o 2)
+		ArrayList<Integer[]> corredoresMasLentos = new ArrayList<>();
 
 		// Recorremos cada etapa para determinar el equipo mas lento.
 		for (int i = 0; i < etapas.length; i++) {
 			double peorTiempo = 0;
 			int equipoLento = 0;
+			int posCorredorLento = 0;
 
 			// Iteramos sobre cada equipo para encontrar el mas lento en la etapa actual.
 			for (int g = 0; g < tiempos.size(); g++) {
@@ -292,63 +295,53 @@ public class Practica {
 					if (tiempo[i] > peorTiempo) {
 						peorTiempo = tiempo[i];
 						equipoLento = g;
+						posCorredorLento = 1;
 					}
 					if (tiempo[i + etapas.length] > peorTiempo) {
 						peorTiempo = tiempo[i + etapas.length];
 						equipoLento = g;
+						posCorredorLento = 2;
 					}
 				} else {
 					// Para equipos con bicicletas convencionales.
 					if (tiempo[i] > peorTiempo) {
 						peorTiempo = tiempo[i];
 						equipoLento = g;
+						posCorredorLento = i == 0 || i == 2 ? 1 : 2;
 					}
 				}
 			}
-			// Guardamos el indice del equipo mas lento en la etapa actual.
-			equiposMasLentos[i] = equipoLento;
+
+			// Anadimos los 2 valores que hemos guardado al array
+			corredoresMasLentos.add(i, new Integer[] { equipoLento, posCorredorLento });
 		}
-		return equiposMasLentos;
+		return corredoresMasLentos;
 	}
 
-	public static void eliminarEquipos(int[] equiposAeliminar, ArrayList<String[]> equipos,
+	public static void eliminarEquipos(ArrayList<Integer[]> equiposAeliminar, ArrayList<String[]> equipos,
 			ArrayList<double[]> tiempos) {
-		// Lista para guardar los numeros de equipos que aparecen repetidos en la lista
-		// de equipos a eliminar.
-		ArrayList<Integer> repeatedNumbers = new ArrayList<>();
-
-		// Recorremos la lista de equipos a eliminar para identificar numeros repetidos.
-		for (int i = 0; i < equiposAeliminar.length; i++) {
-			int count = 0;
-			for (int j = 0; j < equiposAeliminar.length; j++) {
-				if (equiposAeliminar[i] == equiposAeliminar[j]) {
-					count++;
+		
+		// Array en el que guardaremos los indices de los equipos que vayamos a eliminar
+		ArrayList<Integer> indicesEquiposAeliminar = new ArrayList<>();
+		
+		for (int i = 0; i < equiposAeliminar.size(); i++) {
+			for (int j = i + 1; j < equiposAeliminar.size(); j++) {
+				if (Arrays.equals(equiposAeliminar.get(i), equiposAeliminar.get(j))) {
+					// Si en el set de datos guardados es igual, añadimos la posicion 0 que es donde guarda el equipo al array recien creado
+					int indiceEquipoAeliminar = equiposAeliminar.get(i)[0];
+					indicesEquiposAeliminar.add(indiceEquipoAeliminar);
 				}
 			}
-			// Si un numero aparece al menos dos veces y aun no esta en la lista de
-			// repetidos, lo anadimos.
-			if (count >= 2 && !repeatedNumbers.contains(equiposAeliminar[i])) {
-				repeatedNumbers.add(equiposAeliminar[i]);
-			}
 		}
-
-		// Ordenamos la lista de numeros repetidos.
-		Collections.sort(repeatedNumbers);
-
-		// Variable para ajustar el indice del equipo a eliminar debido a la reduccion
-		// del tamano de la lista.
-		int pQuitadas = 0;
-		// Eliminamos los equipos de la lista segun los indices ajustados.
-		for (int n : repeatedNumbers) {
-			int adjustedIndex = n - pQuitadas;
-			if (adjustedIndex >= 0 && adjustedIndex < equipos.size()) {
-				equipos.remove(adjustedIndex);
-				tiempos.remove(adjustedIndex);
-				pQuitadas++;
-				// Imprimimos un mensaje notificando la eliminacion del equipo.
-				System.out.println("Se ha eliminado al equipo " + n + " por tener 2 corredores demasiado lentos");
-			}
+		
+		// Ordenamos el array de mayor a menor para que no afecte a la hora de extraer
+		indicesEquiposAeliminar.sort((a, b) -> b - a);
+		
+		// Iteramos los indices de los equipos a eliminar y los eliminamos
+		for(int indice : indicesEquiposAeliminar) {
+			System.out.println("Se ha eliminado al equipo " + indice + ", " + equipos.get(indice)[0] + ", por lentos");
+			equipos.remove(indice);
+			tiempos.remove(indice);
 		}
-
 	}
 }
