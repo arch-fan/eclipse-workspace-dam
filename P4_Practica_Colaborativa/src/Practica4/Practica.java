@@ -2,6 +2,7 @@ package Practica4;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class Practica {
@@ -19,10 +20,13 @@ public class Practica {
 		apuntarComponentesEjemplo(equipos, tiempos);
 //		apuntarComponentes(equipos, tiempos);
 
+		ArrayList<Integer[]> mejoresCorredores = corredorMasRapidoPorEtapa(equipos, tiempos);
+		agregarTiempoPorBicisMontana(mejoresCorredores, tiempos, 10);
+
 		System.out.print("\n");
 
 		ArrayList<Integer[]> equiposLentos = identificarEquiposLentos(equipos, tiempos);
-		eliminarEquipos(equiposLentos, equipos, tiempos, registroEquiposEliminados);
+		if(equiposLentos.size() >= 1) eliminarEquipos(equiposLentos, equipos, tiempos, registroEquiposEliminados);
 
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
@@ -45,7 +49,21 @@ public class Practica {
 
 		// Llamamos al metodo para imprimir el corredor mas rapido por etapa
 		System.out.println("\nLos participantes mas rapidos por etapas son: ");
-		corredorMasRapidoPorEtapa(equipos, tiempos);
+		ArrayList<Integer[]> corredoresMasRapidos = corredorMasRapidoPorEtapa(equipos, tiempos);
+
+		for (int i = 0; i < corredoresMasRapidos.size(); i++) {
+			Integer[] corredorMasRapido = corredoresMasRapidos.get(i);
+			int iEquipoCorredor = corredorMasRapido[0];
+			int iCorredorRapido = corredorMasRapido[1];
+			double tiempoCorredor = tiempos.get(iEquipoCorredor).length > etapas.length
+					? tiempos.get(iEquipoCorredor)[(iCorredorRapido - 1) * etapas.length + i]
+					: tiempos.get(iEquipoCorredor)[i];
+
+			System.out.println("  - Etapa " + (i + 1) + ": el participante mas rapido es "
+					+ equipos.get(iEquipoCorredor)[iCorredorRapido] + " con una velocidad media de "
+					+ redondearDecimales(calcularKmh(etapas[i], tiempoCorredor), 2) + " km/h");
+		}
+
 	}
 
 	public static void apuntarComponentesEjemplo(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
@@ -127,7 +145,15 @@ public class Practica {
 						try {
 							System.out.print("Introduce el tiempo de la etapa " + (etapa + 1) + " para "
 									+ equipo[ciclista] + ": ");
-							tiempoEquipo[(ciclista - 1) * cantidadEtapas + etapa] = Double.parseDouble(sc.nextLine());
+
+							double input = Double.parseDouble(sc.nextLine());
+							double decimal = input - (int) input;
+							if (decimal >= 0.6) {
+								System.out.println("Introduce un tiempo valido! (ej: 1.30 es 1 hora 30 minutos)");
+								continue;
+							}
+							tiempoEquipo[(ciclista - 1) * cantidadEtapas + etapa] = horasFTiempoToDecimal(input);
+
 							break; // Sale del bucle una vez se obtiene un valor valido.
 						} catch (NumberFormatException e) {
 							// Maneja la excepcion en caso de introducir un valor no numerico.
@@ -194,6 +220,12 @@ public class Practica {
 		return equiposOrdenados;
 	}
 
+	private static double horasFTiempoToDecimal(double horasFTiempo) {
+		int horas = (int) horasFTiempo; // Extraer la parte entera de horasFTiempo (las horas)
+		double minutos = (horasFTiempo - horas) * 100; // Extraer la parte decimal y convertirla a minutos
+		return horas + (minutos / 60); // Convertir los minutos a una fracción decimal de una hora y sumar a las horas
+	}
+
 	private static double calcularKmh(double k, double h) {
 		// Dividimos los km entre las horas que hayamos seleccionado
 		return k / h;
@@ -222,18 +254,20 @@ public class Practica {
 	}
 
 	// Imprimir el corredor mas rapido por etapa
-	public static void corredorMasRapidoPorEtapa(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
-		
+	public static ArrayList<Integer[]> corredorMasRapidoPorEtapa(ArrayList<String[]> equipos,
+			ArrayList<double[]> tiempos) {
+
 		// Posicion 0 del Integer marca el indice del equipo
-		// Posicion 1 del Integer marca la posicion del corredor mas lento (1 o 2)
+		// Posicion 1 del Integer marca la posicion del corredor mas rapido (1 o 2)
 		ArrayList<Integer[]> corredoresMasRapidos = new ArrayList<>();
-		
+
 		// Iteramos cada etapa
 		for (int i = 0; i < etapas.length; i++) {
 			// Guardamos el mayor numero existente en double
 			double mejorTiempo = Double.MAX_VALUE;
 			// Aqui guardamos el nombre del mejor participante de la etapa
-			String mejorParticipante = "";
+			int iMejorEquipo = 0;
+			int iMejorCorredor = 0;
 
 			// Iteramos todos los registros de tiempo, ubicandonos con g
 			for (int g = 0; g < tiempos.size(); g++) {
@@ -245,27 +279,29 @@ public class Practica {
 					// Verificamos si el tiempo iterado es menor al mejor tiempo registrado
 					if (tiempo[i] < mejorTiempo) {
 						mejorTiempo = tiempo[i];
-						mejorParticipante = equipos.get(g)[1];
+						iMejorEquipo = g;
+						iMejorCorredor = 1;
 					}
 					// Aqui comprobamos al segundo participante
 					if (tiempo[i + etapas.length] < mejorTiempo) {
 						mejorTiempo = tiempo[i + etapas.length];
-						mejorParticipante = equipos.get(g)[2];
+						iMejorEquipo = g;
+						iMejorCorredor = 2;
 					}
 				} else {
 					// Aqui las bicis son de montana
 					if (tiempo[i] < mejorTiempo) {
 						mejorTiempo = tiempo[i];
-						mejorParticipante = equipos.get(g)[i % 2 + 1];
+						iMejorEquipo = g;
+						iMejorCorredor = i % 2 + 1;
 					}
 				}
 			}
 
 			// Guardamos la velocidad media e imprimimos el resultado
-			double velocidadMedia = redondearDecimales(calcularKmh(etapas[i], mejorTiempo), 2);
-			System.out.println("  - Etapa " + (i + 1) + ": el participante mas rapido es " + mejorParticipante
-					+ " con una velocidad media de " + velocidadMedia + " km/h");
+			corredoresMasRapidos.add(new Integer[] { iMejorEquipo, iMejorCorredor });
 		}
+		return corredoresMasRapidos;
 	}
 
 	// Calcula la media de un array de numeros, que en este caso utilizamos para
@@ -278,7 +314,8 @@ public class Practica {
 		return sum / tiempos.length;
 	}
 
-	// Indentifica los equipos con el corredor mas lento por etapa, y lo devuelve en el formato especificado abajo.
+	// Indentifica los equipos con el corredor mas lento por etapa, y lo devuelve en
+	// el formato especificado abajo.
 	public static ArrayList<Integer[]> identificarEquiposLentos(ArrayList<String[]> equipos,
 			ArrayList<double[]> tiempos) {
 		// Posicion 0 del Integer marca el indice del equipo
@@ -326,33 +363,59 @@ public class Practica {
 
 	public static void eliminarEquipos(ArrayList<Integer[]> equiposAeliminar, ArrayList<String[]> equipos,
 			ArrayList<double[]> tiempos, ArrayList<String[]> registroEquiposEliminados) {
-		
+
 		// Array en el que guardaremos los indices de los equipos que vayamos a eliminar
-		ArrayList<Integer> indicesEquiposAeliminar = new ArrayList<>();
-		
-		for (int i = 0; i < equiposAeliminar.size(); i++) {
-			for (int j = i + 1; j < equiposAeliminar.size(); j++) {
-				if (Arrays.equals(equiposAeliminar.get(i), equiposAeliminar.get(j))) {
-					// Si en el set de datos guardados es igual, añadimos la posicion 0 que es donde guarda el equipo al array recien creado
-					int indiceEquipoAeliminar = equiposAeliminar.get(i)[0];
-					indicesEquiposAeliminar.add(indiceEquipoAeliminar);
-				}
-			}
+		// Set para almacenar los índices únicos de los equipos que vamos a eliminar
+		HashSet<Integer> indicesEquiposAeliminar = new HashSet<>();
+
+		for (Integer[] equipo : equiposAeliminar) {
+			indicesEquiposAeliminar.add(equipo[0]); // Asumiendo que el índice del equipo está en la posición 0
 		}
-		
-		// Ordenamos el array de mayor a menor para que no afecte a la hora de extraer
-		indicesEquiposAeliminar.sort((a, b) -> b - a);
-		
-		// Iteramos los indices de los equipos a eliminar y los eliminamos
-		for(int i = 0; i < indicesEquiposAeliminar.size(); i++) {
-			int indiceAeliminar = indicesEquiposAeliminar.get(i);
+
+		// Convertir el HashSet a una List y ordenarla de mayor a menor
+		ArrayList<Integer> indicesOrdenados = new ArrayList<>(indicesEquiposAeliminar);
+		indicesOrdenados.sort((a, b) -> b - a);
+
+		// Iterar sobre los índices ordenados y eliminar los equipos
+		for (int indiceAeliminar : indicesOrdenados) {
 			String[] equipoAeliminar = equipos.get(indiceAeliminar);
-			
-			System.out.println("Se ha eliminado al equipo " + indiceAeliminar + ", " + equipoAeliminar[0] + ", por lentos");
-			
+
+			System.out.println(
+					"Se ha eliminado al equipo " + indiceAeliminar + ", " + equipoAeliminar[0] + ", por lentos");
+
 			registroEquiposEliminados.add(equipoAeliminar);
 			equipos.remove(indiceAeliminar);
 			tiempos.remove(indiceAeliminar);
+		}
+
+	}
+
+	public static void agregarTiempoPorBicisMontana(ArrayList<Integer[]> mejoresCorredores, ArrayList<double[]> tiempos,
+			double minutosExtra) {
+		// Convertir minutos en formato hasta 100
+		double duracionExtra = minutosExtra / 60;
+
+		// Recorrer todas las etapas
+		for (int i = 0; i < etapas.length; i++) {
+			Integer[] corredorMasRapido = mejoresCorredores.get(i);
+			int indiceEquipoCorredorMasRapido = corredorMasRapido[0];
+			double[] tiemposDelEquipoCorredorMasRapido = tiempos.get(indiceEquipoCorredorMasRapido);
+
+			// Comprobar si el corredor más rápido de la etapa usa bici de montaña
+			if (tiemposDelEquipoCorredorMasRapido.length == etapas.length) {
+				// Si usa bici de montaña, agregar duración extra a todos los corredores de esa
+				// etapa, excepto al corredor más rápido
+				for (int j = 0; j < tiempos.size(); j++) {
+					if (j != indiceEquipoCorredorMasRapido) { // Asegurar que no estamos añadiendo tiempo al equipo del
+																// corredor de cada equipo
+						tiempos.get(j)[i] += duracionExtra; // Agregar duración extra al primer corredor de cada equipo
+						if (tiempos.get(j).length > etapas.length) { // Verificar si es un equipo con bicis eléctricas
+							tiempos.get(j)[i + etapas.length] += duracionExtra; // Agregar duración extra al segundo
+																				// corredor
+						}
+					}
+				}
+			}
 		}
 	}
 }
