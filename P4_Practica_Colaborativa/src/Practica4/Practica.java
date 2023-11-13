@@ -14,14 +14,15 @@ public class Practica {
 		// por la posicion.
 		ArrayList<String[]> equipos = new ArrayList<>();
 		ArrayList<double[]> tiempos = new ArrayList<>();
+		ArrayList<String[]> registroEquiposEliminados = new ArrayList<>();
 
-//		apuntarComponentesEjemplo(equipos, tiempos);
-		apuntarComponentes(equipos, tiempos);
+		apuntarComponentesEjemplo(equipos, tiempos);
+//		apuntarComponentes(equipos, tiempos);
 
 		System.out.print("\n");
 
 		ArrayList<Integer[]> equiposLentos = identificarEquiposLentos(equipos, tiempos);
-		eliminarEquipos(equiposLentos, equipos, tiempos);
+		eliminarEquipos(equiposLentos, equipos, tiempos, registroEquiposEliminados);
 
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
@@ -222,6 +223,11 @@ public class Practica {
 
 	// Imprimir el corredor mas rapido por etapa
 	public static void corredorMasRapidoPorEtapa(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
+		
+		// Posicion 0 del Integer marca el indice del equipo
+		// Posicion 1 del Integer marca la posicion del corredor mas lento (1 o 2)
+		ArrayList<Integer[]> corredoresMasRapidos = new ArrayList<>();
+		
 		// Iteramos cada etapa
 		for (int i = 0; i < etapas.length; i++) {
 			// Guardamos el mayor numero existente en double
@@ -319,7 +325,7 @@ public class Practica {
 	}
 
 	public static void eliminarEquipos(ArrayList<Integer[]> equiposAeliminar, ArrayList<String[]> equipos,
-			ArrayList<double[]> tiempos) {
+			ArrayList<double[]> tiempos, ArrayList<String[]> registroEquiposEliminados) {
 		
 		// Array en el que guardaremos los indices de los equipos que vayamos a eliminar
 		ArrayList<Integer> indicesEquiposAeliminar = new ArrayList<>();
@@ -338,10 +344,15 @@ public class Practica {
 		indicesEquiposAeliminar.sort((a, b) -> b - a);
 		
 		// Iteramos los indices de los equipos a eliminar y los eliminamos
-		for(int indice : indicesEquiposAeliminar) {
-			System.out.println("Se ha eliminado al equipo " + indice + ", " + equipos.get(indice)[0] + ", por lentos");
-			equipos.remove(indice);
-			tiempos.remove(indice);
+		for(int i = 0; i < indicesEquiposAeliminar.size(); i++) {
+			int indiceAeliminar = indicesEquiposAeliminar.get(i);
+			String[] equipoAeliminar = equipos.get(indiceAeliminar);
+			
+			System.out.println("Se ha eliminado al equipo " + indiceAeliminar + ", " + equipoAeliminar[0] + ", por lentos");
+			
+			registroEquiposEliminados.add(equipoAeliminar);
+			equipos.remove(indiceAeliminar);
+			tiempos.remove(indiceAeliminar);
 		}
 	}
 }
