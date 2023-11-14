@@ -20,13 +20,18 @@ public class Practica {
 		apuntarComponentesEjemplo(equipos, tiempos);
 //		apuntarComponentes(equipos, tiempos);
 
-		ArrayList<Integer[]> mejoresCorredores = corredorMasRapidoPorEtapa(equipos, tiempos);
-		agregarTiempoPorBicisMontana(mejoresCorredores, tiempos, 10);
+		{
+			ArrayList<Integer[]> mejoresCorredores = corredorMasRapidoPorEtapa(equipos, tiempos);
+			agregarTiempoPorBicisMontana(mejoresCorredores, tiempos, 10);
+		}
 
 		System.out.print("\n");
 
-		ArrayList<Integer[]> equiposLentos = identificarEquiposLentos(equipos, tiempos);
-		if(equiposLentos.size() >= 1) eliminarEquipos(equiposLentos, equipos, tiempos, registroEquiposEliminados);
+		{
+			ArrayList<Integer[]> equiposLentos = identificarEquiposLentos(equipos, tiempos);
+			if (equiposLentos.size() >= 1)
+				eliminarEquipos(equiposLentos, equipos, tiempos, registroEquiposEliminados);
+		}
 
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
@@ -152,7 +157,7 @@ public class Practica {
 								System.out.println("Introduce un tiempo valido! (ej: 1.30 es 1 hora 30 minutos)");
 								continue;
 							}
-							tiempoEquipo[(ciclista - 1) * cantidadEtapas + etapa] = horasFTiempoToDecimal(input);
+							tiempoEquipo[(ciclista - 1) * cantidadEtapas + etapa] = convertirHoraMinutosADecimal(input);
 
 							break; // Sale del bucle una vez se obtiene un valor valido.
 						} catch (NumberFormatException e) {
@@ -215,12 +220,12 @@ public class Practica {
 		 * return Double.compare(mediaE1, mediaE2); });
 		 * 
 		 */
-		equiposOrdenados.sort((e1, e2) -> Double.compare(calcularMedia(tiempos.get(equipos.indexOf(e1))),
-				calcularMedia(tiempos.get(equipos.indexOf(e2)))));
+		equiposOrdenados.sort((e1, e2) -> Double.compare(calcularMediaTiempos(tiempos.get(equipos.indexOf(e1))),
+				calcularMediaTiempos(tiempos.get(equipos.indexOf(e2)))));
 		return equiposOrdenados;
 	}
 
-	private static double horasFTiempoToDecimal(double horasFTiempo) {
+	private static double convertirHoraMinutosADecimal(double horasFTiempo) {
 		int horas = (int) horasFTiempo; // Extraer la parte entera de horasFTiempo (las horas)
 		double minutos = (horasFTiempo - horas) * 100; // Extraer la parte decimal y convertirla a minutos
 		return horas + (minutos / 60); // Convertir los minutos a una fracción decimal de una hora y sumar a las horas
@@ -306,7 +311,7 @@ public class Practica {
 
 	// Calcula la media de un array de numeros, que en este caso utilizamos para
 	// calcular la media de los tiempos.
-	private static double calcularMedia(double[] tiempos) {
+	private static double calcularMediaTiempos(double[] tiempos) {
 		double sum = 0;
 		for (double tiempo : tiempos) {
 			sum += tiempo;
@@ -392,7 +397,7 @@ public class Practica {
 
 	public static void agregarTiempoPorBicisMontana(ArrayList<Integer[]> mejoresCorredores, ArrayList<double[]> tiempos,
 			double minutosExtra) {
-		// Convertir minutos en formato hasta 100
+		// Convertir minutos en formato decimal
 		double duracionExtra = minutosExtra / 60;
 
 		// Recorrer todas las etapas
