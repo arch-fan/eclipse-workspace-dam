@@ -28,7 +28,7 @@ public class Practica {
 		System.out.print("\n");
 
 		{
-			ArrayList<Integer[]> equiposLentos = identificarEquiposLentos(equipos, tiempos);
+			ArrayList<Integer[]> equiposLentos = identificarCorredoresLentos(equipos, tiempos);
 			if (equiposLentos.size() >= 1)
 				eliminarEquipos(equiposLentos, equipos, tiempos, registroEquiposEliminados);
 		}
@@ -116,17 +116,20 @@ public class Practica {
 
 		String respuesta; // Variable para almacenar respuestas del usuario.
 		while (masEquipos) {
+
 			// Informacion del equipo
 			String[] equipo = new String[3]; // Array para almacenar los datos de un equipo.
 			System.out.print("\nNombre del equipo " + numeroDeEquipo + ": ");
 			equipo[0] = sc.nextLine(); // Almacena el nombre del equipo.
 
-			// Verificacion de bicicletas electricas
 			boolean bicicletasElectricas; // Indica si el equipo usa bicicletas electricas.
+
+			// Verificacion de bicicletas electricas
 			do {
 				System.out.print("El equipo " + equipo[0] + " utiliza bicicletas electricas? (s/n): ");
 				respuesta = sc.nextLine().toLowerCase();
 				bicicletasElectricas = respuesta.equals("s");
+
 				// Solicita al usuario confirmar si el equipo usa bicicletas electricas.
 				if (!respuesta.equals("s") && !respuesta.equals("n")) {
 					System.out.println("Por favor, introduce 's' o 'n'.");
@@ -134,16 +137,19 @@ public class Practica {
 			} while (!respuesta.equals("s") && !respuesta.equals("n"));
 
 			// Calculo del tiempo
-			int cantidadEtapas = bicicletasElectricas ? 4 : 2; // Determina la cantidad de etapas segun el tipo de
-																// bicicleta.
+			int cantidadEtapas = bicicletasElectricas ? 4 : 2; // Determina la cantidad de etapas por ciclista segun el
+																// tipo de bicicleta con un operador ternario
+
 			double[] tiempoEquipo = new double[cantidadEtapas * 2]; // Array para almacenar tiempos del equipo (dos
 																	// ciclistas).
 
 			for (int ciclista = 1; ciclista <= 2; ciclista++) {
 				// Registro de los nombres de los ciclistas y sus tiempos en cada etapa.
 				System.out.print("\nIntroduce el nombre del " + (ciclista == 1 ? "primer" : "segundo") + " ciclista: ");
-				equipo[ciclista] = sc.nextLine();
+				equipo[ciclista] = sc.nextLine(); // Guardamos el nombre del ciclista en la posicion marcada por el
+													// bucle
 
+				// Por cada etapa, gu++ardamos el tiempo del ciclista
 				for (int etapa = 0; etapa < cantidadEtapas; etapa++) {
 					while (true) {
 						// Recuperamos y validamos la entrada de tiempo de los usuarios
@@ -151,12 +157,29 @@ public class Practica {
 							System.out.print("Introduce el tiempo de la etapa " + (etapa + 1) + " para "
 									+ equipo[ciclista] + ": ");
 
+							// Si obtenemos un error al intentar transformar un numero, pasamos al bloque
+							// catch, el cual hará que se repita el bucle
 							double input = Double.parseDouble(sc.nextLine());
+
+							// Quitamos los minutos a la entrada del usuario para poder verificar si lo ha
+							// introducido en el formato correcto
 							double decimal = input - (int) input;
 							if (decimal >= 0.6) {
 								System.out.println("Introduce un tiempo valido! (ej: 1.30 es 1 hora 30 minutos)");
+								// Si lo ha introducido en el formato erroneo, utilizamos la sentencia continue
+								// para volver al while
 								continue;
 							}
+
+							// Asigna el tiempo del ciclista en formato decimal al array 'tiempoEquipo' en
+							// el índice calculado.
+							// El índice se calcula usando la fórmula: (ciclista - 1) * cantidadEtapas +
+							// etapa.
+							// 'ciclista' es el número del ciclista (1 o 2), 'cantidadEtapas' es el total de
+							// etapas (2 o 4),
+							// y 'etapa' es el número de la etapa actual (0 a 3).
+							// 'convertirHoraMinutosADecimal' convierte el tiempo ingresado ('input') de un
+							// formato de horas y minutos a decimal.
 							tiempoEquipo[(ciclista - 1) * cantidadEtapas + etapa] = convertirHoraMinutosADecimal(input);
 
 							break; // Sale del bucle una vez se obtiene un valor valido.
@@ -171,20 +194,26 @@ public class Practica {
 			// Anade los datos del equipo y sus tiempos a las listas correspondientes.
 			equipos.add(equipo);
 			tiempos.add(tiempoEquipo);
-			numeroDeEquipo++; // Incrementa el contador de equipos.
+			numeroDeEquipo++;
 
 			// Pregunta para anadir mas equipos
 			if (equipos.size() >= 2) {
 				System.out.print("\n¿Quieres introducir otro equipo? (s/n): ");
-				masEquipos = sc.nextLine().toLowerCase().equals("s"); // Determina si se continua con la adicion de
-																		// equipos.
+				masEquipos = sc.nextLine().toLowerCase().equals("s");
 			}
 		}
 
-		sc.close(); // Cierra el Scanner para liberar recursos.
+		sc.close();
 	}
 
-	// Devuelve la lista de todos los equipos de manera ordenada por tiempo.
+	/**
+	 * Devuelve la lista de todos los equipos de manera ordenada por tiempo sin
+	 * mutarla.
+	 * 
+	 * @param equipos Array que guarda todos los equipos del programa.
+	 * @param tiempos Array que guarda todos los tiempos del programa.
+	 * @return La lista de equipos original ordenada por el tiempo medio del equipo.
+	 */
 	private static ArrayList<String[]> clasificarEquipos(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
 		// Primero, clonamos el ArrayLisy de los equipos, ya que lo vamos a mutar.
 		ArrayList<String[]> equiposOrdenados = new ArrayList<>(equipos);
@@ -225,17 +254,45 @@ public class Practica {
 		return equiposOrdenados;
 	}
 
+	/**
+	 * Convierte un tiempo expresado en formato tiempo a su equivalente decimal.
+	 * 
+	 * Este método toma un tiempo en un formato donde las horas y los minutos están
+	 * combinados en un único número (por ejemplo, 1.30 representa 1 hora y 30
+	 * minutos) y lo convierte a un número decimal, donde los minutos se transforman
+	 * en formato tiempo. Por ejemplo, 1.30 se convierte en 1.5.
+	 *
+	 * @param horasFTiempo El tiempo en formato tiempo, donde la parte entera
+	 *                     representa las horas y la parte decimal representa los
+	 *                     minutos.
+	 * @return El tiempo convertido en formato decimal.
+	 */
 	private static double convertirHoraMinutosADecimal(double horasFTiempo) {
 		int horas = (int) horasFTiempo; // Extraer la parte entera de horasFTiempo (las horas)
 		double minutos = (horasFTiempo - horas) * 100; // Extraer la parte decimal y convertirla a minutos
 		return horas + (minutos / 60); // Convertir los minutos a una fracción decimal de una hora y sumar a las horas
 	}
 
+	/**
+	 * Convierte dos parametros de kilometros y horas en Km/h
+	 *
+	 * @param k El recorrido en kilometros (ej: 170km)
+	 * @param h Las horas que tarda en recorrer los kilometros (ej: 1.5 es 1h 30m)
+	 * @return
+	 */
 	private static double calcularKmh(double k, double h) {
 		// Dividimos los km entre las horas que hayamos seleccionado
 		return k / h;
 	}
 
+	/**
+	 * Calcula los Km/h de un equipo. Un equipo es un array de tiempo de 4 u 8
+	 * posiciones.
+	 *
+	 * @param tiempoEquipo Array de tiempo de 4 u 8 posiciones con las marcas de
+	 *                     tiempo que representan a un equipo
+	 * @return El tiempo en formato Km/h
+	 */
 	private static double calcularKmhEquipo(double[] tiempoEquipo) {
 		// Utilizamos stream para iterar todos los elementos del array, y con el metodo
 		// sum, sumamos todos los valores en la misma variable
@@ -249,16 +306,33 @@ public class Practica {
 		}
 	}
 
-	// Pasamos de primer parametro el numero que queremos devolver redondeado, y de
-	// segundo parametro, la cantidad de decimales que queramos mostrar.
+	/**
+	 * Metodo generico para redondear cualquier decimal a las posiciones deseadas.
+	 * 
+	 * @param n        Numero a redondear
+	 * @param cantidad Cantidad de decimales a los que se quiere redondear
+	 * @return El numero redondeado
+	 */
 	private static double redondearDecimales(double n, int cantidad) {
-		// Hace la potencia de 10, elevado a la cantidad de decimales.
+		// Calculamos la cantidad de posiciones que se tiene que desplazar la coma a la
+		// derecha del numero
 		double decimales = Math.pow(10.0, cantidad);
-		// Devuelve el redondeo de numeros.
+		// Redondeamos moviendo la coma la cantidad de veces especificadas en decimales
+		// y le volvemos a poner la coma
 		return Math.round(n * decimales) / decimales;
 	}
 
-	// Imprimir el corredor mas rapido por etapa
+	/**
+	 * Metodo para recuperar al corredor mas rapido de cada etapa
+	 * 
+	 * @param equipos Array de equipos pertenecientes a la competicion
+	 * @param tiempos Array de tiempos pertenecientes a cada equipo
+	 * @return Un ArrayList de Arrays de numeros que por posicion guarda al corredor
+	 *         mas rapido de la etapa marcada por la posicion, en los que dentro de
+	 *         cada array de numeros, la posicion 0 marca el indice del equipo con
+	 *         el corredor mas rapido y la posicion 1 marca la posicion del corredor
+	 *         mas rapido del equipo
+	 */
 	public static ArrayList<Integer[]> corredorMasRapidoPorEtapa(ArrayList<String[]> equipos,
 			ArrayList<double[]> tiempos) {
 
@@ -270,7 +344,7 @@ public class Practica {
 		for (int i = 0; i < etapas.length; i++) {
 			// Guardamos el mayor numero existente en double
 			double mejorTiempo = Double.MAX_VALUE;
-			// Aqui guardamos el nombre del mejor participante de la etapa
+			// Guardamos el nombre del mejor participante de la etapa
 			int iMejorEquipo = 0;
 			int iMejorCorredor = 0;
 
@@ -303,25 +377,44 @@ public class Practica {
 				}
 			}
 
-			// Guardamos la velocidad media e imprimimos el resultado
+			// Guardamos el indice del mejor equipo de la etapa y el indice del mejor
+			// corredor de la etapa.
 			corredoresMasRapidos.add(new Integer[] { iMejorEquipo, iMejorCorredor });
 		}
 		return corredoresMasRapidos;
 	}
 
-	// Calcula la media de un array de numeros, que en este caso utilizamos para
-	// calcular la media de los tiempos.
+	/**
+	 * Calcula la media de un array de numeros de tipo double.
+	 * 
+	 * @param tiempos Array de numeros a calcular la media
+	 * @return La media de los numeros de la lista pasada como parametro
+	 */
 	private static double calcularMediaTiempos(double[] tiempos) {
-		double sum = 0;
+		double sum = 0; // Variable en la que iremos guardando la suma de los numeros
+
+		// Iteramos el array para extraer todos los numeros y sumarlos a la variable sum
 		for (double tiempo : tiempos) {
 			sum += tiempo;
 		}
+
+		// Devolvemos la suma de todos los numeros y la dividimos por la cantidad de
+		// numeros que haya
 		return sum / tiempos.length;
 	}
 
-	// Indentifica los equipos con el corredor mas lento por etapa, y lo devuelve en
-	// el formato especificado abajo.
-	public static ArrayList<Integer[]> identificarEquiposLentos(ArrayList<String[]> equipos,
+	/**
+	 * Metodo para recuperar al corredor mas lento de cada etapa
+	 * 
+	 * @param equipos Array de equipos pertenecientes a la competicion
+	 * @param tiempos Array de tiempos pertenecientes a cada equipo
+	 * @return Un ArrayList de Arrays de numeros que por posicion guarda al corredor
+	 *         mas lento de la etapa marcada por la posicion, en los que dentro de
+	 *         cada array de numeros, la posicion 0 marca el indice del equipo con
+	 *         el corredor mas rapido y la posicion 1 marca la posicion del corredor
+	 *         mas rapido del equipo
+	 */
+	public static ArrayList<Integer[]> identificarCorredoresLentos(ArrayList<String[]> equipos,
 			ArrayList<double[]> tiempos) {
 		// Posicion 0 del Integer marca el indice del equipo
 		// Posicion 1 del Integer marca la posicion del corredor mas lento (1 o 2)
@@ -366,6 +459,14 @@ public class Practica {
 		return corredoresMasLentos;
 	}
 
+	/**
+	 * Elimina equipos de la competicion dados los parametros. Para ser eliminados, 
+	 * 
+	 * @param equiposAeliminar ArrayList de Arrays de numeros en los que dentro de
+	 *                         cada uno contiene: Pos 0 indice del equipo a
+	 *                         eliminar, Pos 1 indice del miembro dentro del equipo
+	 * @return La media de los numeros de la lista pasada como parametro
+	 */
 	public static void eliminarEquipos(ArrayList<Integer[]> equiposAeliminar, ArrayList<String[]> equipos,
 			ArrayList<double[]> tiempos, ArrayList<String[]> registroEquiposEliminados) {
 
