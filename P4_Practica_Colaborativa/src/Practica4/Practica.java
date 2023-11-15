@@ -17,8 +17,8 @@ public class Practica {
 		ArrayList<double[]> tiempos = new ArrayList<>();
 		ArrayList<String[]> registroEquiposEliminados = new ArrayList<>();
 
-		apuntarComponentesEjemplo(equipos, tiempos);
-//		apuntarComponentes(equipos, tiempos);
+//		apuntarComponentesEjemplo(equipos, tiempos);
+		apuntarComponentes(equipos, tiempos);
 
 		{
 			ArrayList<Integer[]> mejoresCorredores = corredorMasRapidoPorEtapa(equipos, tiempos);
@@ -460,26 +460,40 @@ public class Practica {
 	}
 
 	/**
-	 * Elimina equipos de la competicion dados los parametros. Para ser eliminados, 
+	 * Elimina equipos de la competicion dados los parametros. Para ser eliminados,
+	 * debe estar duplicado el array dentro del parametro equiposAeliminar
 	 * 
-	 * @param equiposAeliminar ArrayList de Arrays de numeros en los que dentro de
-	 *                         cada uno contiene: Pos 0 indice del equipo a
-	 *                         eliminar, Pos 1 indice del miembro dentro del equipo
-	 * @return La media de los numeros de la lista pasada como parametro
+	 * @param equiposAeliminar          ArrayList de Arrays de numeros en los que
+	 *                                  dentro de cada uno contiene: Pos 0 indice
+	 *                                  del equipo a eliminar, Pos 1 indice del
+	 *                                  miembro dentro del equipo a eliminar
+	 * @param equipos                   Array de equipos pertenecientes a la
+	 *                                  competicion
+	 * @param tiempos                   Array de tiempos pertenecientes a cada
+	 *                                  equipo
+	 * @param registroEquiposEliminados Array en el que guardamos el registro de los
+	 *                                  equipos eliminados
 	 */
 	public static void eliminarEquipos(ArrayList<Integer[]> equiposAeliminar, ArrayList<String[]> equipos,
 			ArrayList<double[]> tiempos, ArrayList<String[]> registroEquiposEliminados) {
 
-		// Array en el que guardaremos los indices de los equipos que vayamos a eliminar
-		// Set para almacenar los índices únicos de los equipos que vamos a eliminar
-		HashSet<Integer> indicesEquiposAeliminar = new HashSet<>();
+		// Set en el que guardaremos los indices de los equipos que vayamos a eliminar
+		HashSet<Integer> indicesDuplicados = new HashSet<>();
 
-		for (Integer[] equipo : equiposAeliminar) {
-			indicesEquiposAeliminar.add(equipo[0]); // Asumiendo que el índice del equipo está en la posición 0
+		// Iteramos el array con los equipos a eliminar y lo volvemos a iterar con la
+		// siguiente posicion para comprobar si hay duplicados, y si esta duplicado lo
+		// añadimos al set para eliminarlo despues
+		for (int i = 0; i < equiposAeliminar.size(); i++) {
+			for (int j = i + 1; j < equiposAeliminar.size(); j++) {
+				if (Arrays.equals(equiposAeliminar.get(i), equiposAeliminar.get(j))) {
+					indicesDuplicados.add(equiposAeliminar.get(i)[0]);
+				}
+			}
 		}
 
-		// Convertir el HashSet a una List y ordenarla de mayor a menor
-		ArrayList<Integer> indicesOrdenados = new ArrayList<>(indicesEquiposAeliminar);
+		// Convertir el Set a un ArrayList y ordenarla de mayor a menor
+		ArrayList<Integer> indicesOrdenados = new ArrayList<>(indicesDuplicados);
+		// Ordenamos de mayor a menor con el algoritmo quicksort explicado anteriormente
 		indicesOrdenados.sort((a, b) -> b - a);
 
 		// Iterar sobre los índices ordenados y eliminar los equipos
@@ -496,6 +510,24 @@ public class Practica {
 
 	}
 
+	/**
+	 * Metodo para penalizar y/o agregar 10 minutos a los corredores que no han
+	 * quedado primeros en su etapa
+	 * 
+	 * @param mejoresCorredores ArrayList de Arrays de numeros en los que dentro de
+	 *                          cada uno contiene: Pos 0 indice del equipo a
+	 *                          eliminar, Pos 1 indice del miembro dentro del equipo
+	 *                          que ha quedado primero
+	 * 
+	 * @param tiempos           Array de tiempos pertenecientes a cada equipo
+	 * @param minutosExtra      Cantidad de tiempo a penalizar (en minutos)
+	 * 
+	 * @return Un ArrayList de Arrays de numeros que por posicion guarda al corredor
+	 *         mas lento de la etapa marcada por la posicion, en los que dentro de
+	 *         cada array de numeros, la posicion 0 marca el indice del equipo con
+	 *         el corredor mas rapido y la posicion 1 marca la posicion del corredor
+	 *         mas rapido del equipo
+	 */
 	public static void agregarTiempoPorBicisMontana(ArrayList<Integer[]> mejoresCorredores, ArrayList<double[]> tiempos,
 			double minutosExtra) {
 		// Convertir minutos en formato decimal
@@ -512,12 +544,15 @@ public class Practica {
 				// Si usa bici de montaña, agregar duración extra a todos los corredores de esa
 				// etapa, excepto al corredor más rápido
 				for (int j = 0; j < tiempos.size(); j++) {
-					if (j != indiceEquipoCorredorMasRapido) { // Asegurar que no estamos añadiendo tiempo al equipo del
-																// corredor de cada equipo
-						tiempos.get(j)[i] += duracionExtra; // Agregar duración extra al primer corredor de cada equipo
-						if (tiempos.get(j).length > etapas.length) { // Verificar si es un equipo con bicis eléctricas
-							tiempos.get(j)[i + etapas.length] += duracionExtra; // Agregar duración extra al segundo
-																				// corredor
+					// Evitamos sumar 10 minutos al corredor que ha quedado mejor
+					if (j != indiceEquipoCorredorMasRapido) {
+
+						// Agregar duración extra al primer corredor de cada equipo
+						tiempos.get(j)[i] += duracionExtra;
+						// Verificar si es un equipo con bicis eléctricas
+						if (tiempos.get(j).length > etapas.length) {
+							// Agregar duración extra al segundo corredor
+							tiempos.get(j)[i + etapas.length] += duracionExtra;
 						}
 					}
 				}
