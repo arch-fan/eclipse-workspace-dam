@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class Practica {
 
 	// Constante que define los kilometros que tiene cada etapa.
 	private static final double[] etapas = { 74.12, 63.89, 67.37, 84.03 };
+	private static Scanner sc = new Scanner(System.in);
 
 	public static void main(String[] args) {
 		// Variables en las que guardamos tanto los tiempos como los equipos, guiandonos
@@ -35,6 +38,9 @@ public class Practica {
 
 		// Invocamos el metodo para ordenar los equipos por la clasificacion.
 		ArrayList<String[]> equiposClasificados = clasificarEquipos(equipos, tiempos);
+		// Creamos un array list para guardar el tiempo medio de los 3 ganadores, ya que
+		// lo usaremos despues
+		ArrayList<Double> tiempoMedioPorEquipo = new ArrayList<>();
 
 		System.out.println("\nLos 3 primeros equipos son: ");
 		{
@@ -46,6 +52,7 @@ public class Practica {
 			for (int i = 0; i < max; i++) {
 				String[] equipo = equiposClasificados.get(i);
 				double kmh = calcularKmhEquipo(tiempos.get(equipos.indexOf(equipo)));
+				tiempoMedioPorEquipo.add(kmh);
 				// Muestra los tres primeros clasificados
 				System.out.println("  - El equipo en la posicion " + (i + 1) + " es " + equipo[0]
 						+ " con una velocidad media de " + redondearDecimales(kmh, 2) + " km/h");
@@ -69,6 +76,45 @@ public class Practica {
 					+ redondearDecimales(calcularKmh(etapas[i], tiempoCorredor), 2) + " km/h");
 		}
 
+		int iEquipoMasRapido = 0;
+
+		{
+			double maxN = 0;
+			for (int i = 0; i < tiempoMedioPorEquipo.size(); i++) {
+				double tiempoLoop = tiempoMedioPorEquipo.get(i);
+				if (tiempoLoop > maxN) {
+					maxN = tiempoLoop;
+					iEquipoMasRapido = i;
+				}
+			}
+		}
+
+		boolean correoCorrecto = false;
+		// Para pedir el correo, verificaremos que el correo sea correcto repitiendo el
+		// bucle
+		while (!correoCorrecto) {
+			System.out
+					.println("Felicidades " + equipos.get(equipos.indexOf(equiposClasificados.get(iEquipoMasRapido)))[0]
+							+ " habeis sido los ganadores.");
+			System.out.print("Ahora, introducid vuestro correo: ");
+			String email = sc.nextLine();
+
+			// Guardamos el patron del correo con el dominio especificado
+			Pattern pattern = Pattern.compile("^.+@salesianosalcala\\.com$");
+			// Verificamos el correo con el patron
+			Matcher matcher = pattern.matcher(email);
+
+			// Si hace el match, nos quedamos el correo, si no, volvemos a pedirlo
+			if (matcher.matches()) {
+				System.out.println("Gracias por participar! Nos vemos en la proxima.");
+				correoCorrecto = true;
+			} else {
+				System.out.println(
+						email + " no es un correo electrónico valido. Debe pertenecer al dominio salesianosalcala.com");
+				continue;
+			}
+		}
+		sc.close();
 	}
 
 	public static void apuntarComponentesEjemplo(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
@@ -108,7 +154,6 @@ public class Practica {
 
 	// Metodo para recoger la entrada del usuario y anadirlos al array de datos
 	public static void apuntarComponentes(ArrayList<String[]> equipos, ArrayList<double[]> tiempos) {
-		Scanner sc = new Scanner(System.in);
 		System.out.println("¡Bienvenido al registro de equipos de ciclismo!");
 
 		boolean masEquipos = true; // Controla si se desea continuar anadiendo equipos.
@@ -202,8 +247,6 @@ public class Practica {
 				masEquipos = sc.nextLine().toLowerCase().equals("s");
 			}
 		}
-
-		sc.close();
 	}
 
 	/**
