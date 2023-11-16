@@ -102,7 +102,7 @@ public class Practica {
 			// Guardamos el patron del correo con el dominio especificado
 			Pattern pattern = Pattern.compile("^.+@salesianosalcala\\.com$");
 			// Verificamos el correo con el patron
-			Matcher matcher = pattern.matcher(email);
+			Matcher matcher = pattern.matcher(email.trim());
 
 			// Si hace el match, nos quedamos el correo, si no, volvemos a pedirlo
 			if (matcher.matches()) {
