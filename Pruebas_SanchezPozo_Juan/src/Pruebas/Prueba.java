@@ -1,21 +1,18 @@
 package Pruebas;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Prueba {
 
 	public static void main(String[] args) {
-		ArrayList<Integer> numeros = new ArrayList<>();
-        numeros.add(5);
-        numeros.add(2);
-        numeros.add(8);
-        numeros.add(1);
-        numeros.add(3);
+		ArrayList<Avion> aviones = new ArrayList<>(
+				Arrays.asList(new Avion("Boing747", "WWW000"), new Avion("Airbus370", "LKMASD")));
 
-        System.out.println(numeros);
-        numeros.sort((a, b) -> a + b);
-        System.out.println(numeros);
-        
+		Piloto piloto = new Piloto("Paco", 01222244, "Tipo 1", 35, "12-01-2009", aviones);
+		
+		System.out.println(piloto);
+
 	}
 
 }
