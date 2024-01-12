@@ -165,7 +165,7 @@ public class Paciente {
 	}
 
 	/**
-	 * Calcula el Índice de Masa Corporal (IMC) del paciente.
+	 * Calcula el Indice de Masa Corporal (IMC) del paciente.
 	 * 
 	 * @return El IMC del paciente.
 	 */
