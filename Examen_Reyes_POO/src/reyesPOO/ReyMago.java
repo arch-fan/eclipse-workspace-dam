@@ -8,8 +8,8 @@ public class ReyMago {
 
 	public ReyMago(String name) {
 
-		if (comprobarRey(name)) {
-			this.name = name;
+		if (comprobarRey(name.toLowerCase())) {
+			this.name = name.toLowerCase();
 		} else {
 			throw new IllegalArgumentException("Nombre del rey no válido: " + name);
 		}

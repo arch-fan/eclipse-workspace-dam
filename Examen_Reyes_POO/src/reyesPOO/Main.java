@@ -1,31 +1,33 @@
 package reyesPOO;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 	private static Scanner sc = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		ArrayList<Carta> cartas = new ArrayList<>();
-
-		while (true) {
-			cartas.add(createCarta());
-			System.out.println("Quieres crear otra carta? (s/n): ");
-			if (sc.nextLine().trim().toLowerCase().equals("n")) {
-				break;
-			}
-		}
+		
+		// ArrayList<Carta> cartas = new ArrayList<>();
+		List<Carta> cartas = Carta.cartasExample();
+//		while (true) {
+//			cartas.add(createCarta());
+//			System.out.println("Quieres crear otra carta? (s/n): ");
+//			if (sc.nextLine().trim().toLowerCase().equals("n")) {
+//				break;
+//			}
+//		}
 
 		for (Carta carta : cartas) {
-			System.out.println("\n");
 			System.out.println("Carta ID: " + carta.hashCode());
 			System.out.println("Nombre niño: " + carta.getNombreNino());
 			System.out.println("Dirigido al rey: " + carta.getReyMago().getName());
 			System.out.println("Con los siguientes juguetes: ");
 			carta.getJuguetes().forEach((juguete) -> {
-				System.out.println("  - " + juguete.getNombre());
+				System.out.println("  - " + juguete.getNombre() + " | " + juguete.getCategoria());
 			});
+			System.out.print("\n");
 
 		}
 
