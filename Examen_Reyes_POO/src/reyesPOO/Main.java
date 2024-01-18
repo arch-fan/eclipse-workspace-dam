@@ -2,17 +2,26 @@ package reyesPOO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Main {
 	private static Scanner sc = new Scanner(System.in);
+	private static List<Carta> cartas = new ArrayList<>();
 
 	public static void main(String[] args) {
-		
-		// ArrayList<Carta> cartas = new ArrayList<>();
-		List<Carta> cartas = Carta.cartasExample();
+
+		cartas.addAll(Carta.cartasExample());
 //		while (true) {
-//			cartas.add(createCarta());
+//			try {
+//				cartas.add(createCarta());
+//			} catch (Error e) {
+//				System.out.println(e.getMessage());
+//			}
+//
 //			System.out.println("Quieres crear otra carta? (s/n): ");
 //			if (sc.nextLine().trim().toLowerCase().equals("n")) {
 //				break;
@@ -28,8 +37,26 @@ public class Main {
 				System.out.println("  - " + juguete.getNombre() + " | " + juguete.getCategoria());
 			});
 			System.out.print("\n");
-
 		}
+
+		System.out.println("--- Estadísticas Categorías ---");
+		Map<String, Long> estadisticasCategorias = Carta.totalEstadisticaCategoria(cartas);
+		Long totalCategorias = estadisticasCategorias.values().stream().mapToLong(Long::longValue).sum();
+
+		estadisticasCategorias.forEach((k, v) -> {
+			System.out.println(k + ": " + (((double) v / (double) totalCategorias) * (double) 100) + "%");
+		});
+
+		System.out.println("--- Estadísticas Reyes ---");
+		Map<String, Long> estadisticasReyes = cartas.stream().map(Carta::getReyMago)
+				.collect(Collectors.groupingBy(ReyMago::getName, Collectors.counting()));
+		Long totalReyes = estadisticasReyes.values().stream().mapToLong(Long::longValue).sum();
+
+		estadisticasReyes.forEach((k, v) -> {
+			System.out.println(k + ": " + (((double) v / (double) totalReyes) * (double) 100) + "%");
+		});
+		
+		correrRegex();
 
 		sc.close();
 	}
@@ -38,6 +65,9 @@ public class Main {
 
 		System.out.print("Nombre del niño: ");
 		String nombreNino = sc.nextLine();
+		if (Carta.comprobarNinoRepetido(cartas, nombreNino)) {
+			throw new Error("Niño, no repitas carta!");
+		}
 
 		ReyMago reyMago;
 		while (true) {
@@ -77,5 +107,43 @@ public class Main {
 				System.out.println(e.getMessage());
 			}
 		}
+	}
+
+	public static void correrRegex() {
+		ArrayList<String> listaRegalos = cartas.stream()
+				.flatMap(carta -> carta.getJuguetes().stream())
+				.map(Juguete::getNombre)
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		int azCount = 0;
+		int steamCount = 0;
+		int jugueteCount = 0;
+
+		for (String regalo : listaRegalos) {
+			Pattern pAz = Pattern.compile("[^a-zA-Z]");
+			Matcher mAz = pAz.matcher(regalo);
+
+			if (mAz.find()) {
+				azCount++;
+			}
+
+			Pattern pSteam = Pattern.compile("steam");
+			Matcher mSteam = pSteam.matcher(regalo);
+
+			if (mSteam.find()) {
+				steamCount++;
+			}
+
+			Pattern pJuguete = Pattern.compile("steam");
+			Matcher mJuguete = pJuguete.matcher(regalo);
+
+			if (mJuguete.find()) {
+				jugueteCount++;
+			}
+		}
+
+		System.out.println("Hay " + azCount + " caracteres diferentes a a-z en las peticiones");
+		System.out.println("Aparece " + steamCount + " veces la palabra steam en las peticiones");
+		System.out.println("Aparece " + jugueteCount + " veces la palabra juguete en las peticiones");
 	}
 }
