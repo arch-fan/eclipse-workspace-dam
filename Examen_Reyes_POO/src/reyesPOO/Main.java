@@ -14,19 +14,19 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		cartas.addAll(Carta.cartasExample());
-//		while (true) {
-//			try {
-//				cartas.add(createCarta());
-//			} catch (Error e) {
-//				System.out.println(e.getMessage());
-//			}
-//
-//			System.out.println("Quieres crear otra carta? (s/n): ");
-//			if (sc.nextLine().trim().toLowerCase().equals("n")) {
-//				break;
-//			}
-//		}
+//		cartas.addAll(Carta.cartasExample());
+		while (true) {
+			try {
+				cartas.add(createCarta());
+			} catch (Error e) {
+				System.out.println(e.getMessage());
+			}
+
+			System.out.println("Quieres crear otra carta? (s/n): ");
+			if (sc.nextLine().trim().toLowerCase().equals("n")) {
+				break;
+			}
+		}
 
 		for (Carta carta : cartas) {
 			System.out.println("Carta ID: " + carta.hashCode());
@@ -55,7 +55,7 @@ public class Main {
 		estadisticasReyes.forEach((k, v) -> {
 			System.out.println(k + ": " + (((double) v / (double) totalReyes) * (double) 100) + "%");
 		});
-		
+
 		correrRegex();
 
 		sc.close();
@@ -110,10 +110,8 @@ public class Main {
 	}
 
 	public static void correrRegex() {
-		ArrayList<String> listaRegalos = cartas.stream()
-				.flatMap(carta -> carta.getJuguetes().stream())
-				.map(Juguete::getNombre)
-				.collect(Collectors.toCollection(ArrayList::new));
+		ArrayList<String> listaRegalos = cartas.stream().flatMap(carta -> carta.getJuguetes().stream())
+				.map(Juguete::getNombre).collect(Collectors.toCollection(ArrayList::new));
 
 		int azCount = 0;
 		int steamCount = 0;
