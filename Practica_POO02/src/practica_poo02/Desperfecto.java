@@ -5,14 +5,16 @@ public class Desperfecto {
 	private double precioUnidad;
 	private double precioTotal;
 	private int cantidad;
-	private double valorCubierto;
+	private double valorCubiertoTotal;
+	private double valorCubiertoUnidad;
 
 	public Desperfecto(String nombre, double precioUnidad, int cantidad, double valorCubierto) {
 		this.nombre = nombre;
 		this.precioUnidad = precioUnidad;
 		this.precioTotal = precioUnidad * cantidad;
 		this.cantidad = cantidad;
-		this.valorCubierto = valorCubierto;
+		this.valorCubiertoUnidad = valorCubierto;
+		this.valorCubiertoTotal = valorCubierto * cantidad;
 	}
 
 	public String getNombre() {
@@ -27,8 +29,12 @@ public class Desperfecto {
 		return cantidad;
 	}
 
-	public double getValorCubierto() {
-		return valorCubierto;
+	public double getValorCubiertoTotal() {
+		return valorCubiertoTotal;
+	}
+	
+	public double getValorCubiertoUnidad() {
+		return valorCubiertoUnidad;
 	}
 	
 	public double getPrecioTotal() {

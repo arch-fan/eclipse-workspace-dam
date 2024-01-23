@@ -15,15 +15,14 @@ public class Factura {
 		this.facturaGenerador = facturaGenerador;
 		this.facturaElectricista = facturaElectricista;
 
-		double devolucionDesperfectos = desperfectos.stream().mapToDouble(Desperfecto::getValorCubierto).sum();
+		double devolucionDesperfectos = desperfectos.stream().mapToDouble(Desperfecto::getValorCubiertoTotal).sum();
 		double devolucionesGenerador = facturaGenerador / 1.21;
-		double devolucionElectricista = facturaGenerador / 1.21;
+		double devolucionElectricista = facturaElectricista / 1.21;
 
 		this.aDevolver = devolucionDesperfectos + devolucionesGenerador + devolucionElectricista;
 
 		this.aPagar = desperfectos.stream().mapToDouble(Desperfecto::getPrecioTotal).sum() + facturaGenerador
 				+ facturaElectricista;
-
 	}
 
 	public List<Desperfecto> getDesperfectos() {

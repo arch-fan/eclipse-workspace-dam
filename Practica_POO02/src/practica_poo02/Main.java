@@ -8,7 +8,7 @@ public class Main {
 	public static void main(String[] args) {
 		List<Desperfecto> desperfectos = Arrays.asList(
 				new Luminaria("Downlight Led", 20, 25),
-				new ServicioGeneral("Comida Congelada", 150, 1),
+				new ServicioGeneral("Comida Congela da", 150, 1),
 				new ServicioGeneral("Verduras", 20, 1),
 				new ServicioGeneral("Lavadora", 450, 1),
 				new Informatico("Switch programable", 250, 1, 3),
@@ -18,7 +18,7 @@ public class Main {
 				);
 		
 		Factura factura = new Factura(desperfectos, 3200, 2347);
-		
+	
 		System.out.println("El precio a pagar es " + factura.getaPagar() + " y te devuelven " + Math.round(factura.getaDevolver() * 100) / 100.0 );
 	}
 
