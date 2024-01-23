@@ -21,7 +21,7 @@ public class Factura {
 
 		this.aDevolver = devolucionDesperfectos + devolucionesGenerador + devolucionElectricista;
 
-		this.aPagar = desperfectos.stream().mapToDouble(Desperfecto::getPrecio).sum() + facturaGenerador
+		this.aPagar = desperfectos.stream().mapToDouble(Desperfecto::getPrecioTotal).sum() + facturaGenerador
 				+ facturaElectricista;
 
 	}

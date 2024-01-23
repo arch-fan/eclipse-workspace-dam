@@ -2,13 +2,15 @@ package practica_poo02;
 
 public class Desperfecto {
 	private String nombre;
-	private double precio;
+	private double precioUnidad;
+	private double precioTotal;
 	private int cantidad;
 	private double valorCubierto;
 
-	public Desperfecto(String nombre, double precio, int cantidad, double valorCubierto) {
+	public Desperfecto(String nombre, double precioUnidad, int cantidad, double valorCubierto) {
 		this.nombre = nombre;
-		this.precio = precio;
+		this.precioUnidad = precioUnidad;
+		this.precioTotal = precioUnidad * cantidad;
 		this.cantidad = cantidad;
 		this.valorCubierto = valorCubierto;
 	}
@@ -17,8 +19,8 @@ public class Desperfecto {
 		return nombre;
 	}
 
-	public double getPrecio() {
-		return precio;
+	public double getPrecioUnidad() {
+		return precioUnidad;
 	}
 
 	public int getCantidad() {
@@ -27,5 +29,9 @@ public class Desperfecto {
 
 	public double getValorCubierto() {
 		return valorCubierto;
+	}
+	
+	public double getPrecioTotal() {
+		return precioTotal;
 	}
 }
