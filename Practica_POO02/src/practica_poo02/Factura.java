@@ -9,8 +9,9 @@ public class Factura {
 	private double facturaElectricista;
 	private double aDevolver;
 	private double aPagar;
+	private int horasSinLuz;
 
-	public Factura(List<Desperfecto> desperfectos, double facturaGenerador, double facturaElectricista) {
+	public Factura(List<Desperfecto> desperfectos, double facturaGenerador, double facturaElectricista, int horasSinLuz) {
 		this.desperfectos = desperfectos;
 		this.facturaGenerador = facturaGenerador;
 		this.facturaElectricista = facturaElectricista;
@@ -19,7 +20,7 @@ public class Factura {
 		double devolucionesGenerador = facturaGenerador / 1.21;
 		double devolucionElectricista = facturaElectricista / 1.21;
 
-		this.aDevolver = devolucionDesperfectos + devolucionesGenerador + devolucionElectricista;
+		this.aDevolver = devolucionDesperfectos + devolucionesGenerador + devolucionElectricista + (horasSinLuz * 30);
 
 		this.aPagar = desperfectos.stream().mapToDouble(Desperfecto::getPrecioTotal).sum() + facturaGenerador
 				+ facturaElectricista;

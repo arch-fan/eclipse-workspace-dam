@@ -17,7 +17,7 @@ public class Main {
 				new Informatico("Etapa de potencia Teatro", 800, 1, 6)
 				);
 		
-		Factura factura = new Factura(desperfectos, 3200, 2347);
+		Factura factura = new Factura(desperfectos, 3200, 2347, 48);
 	
 		System.out.println("El precio a pagar es " + factura.getaPagar() + " y te devuelven " + Math.round(factura.getaDevolver() * 100) / 100.0 );
 	}
