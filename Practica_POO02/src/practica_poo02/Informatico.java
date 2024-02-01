@@ -1,5 +1,6 @@
 package practica_poo02;
 
+// Clase para guardar los desperfectos informaticos
 public class Informatico extends Desperfecto {
 	private int ano;
 
@@ -12,7 +13,8 @@ public class Informatico extends Desperfecto {
 		return ano;
 	}
 
+	// Calculamos lo que nos devuelve el seguro
 	private static double calcularSeguro(double precio, int ano) {
-		return precio - precio * (0.15 * ano);
+		return precio * (0.15 * ano);
 	}
 }

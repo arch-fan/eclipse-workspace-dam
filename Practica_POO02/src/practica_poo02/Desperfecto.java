@@ -1,6 +1,7 @@
 package practica_poo02;
 
 public class Desperfecto {
+	// Clase maestra donde designamos los datos que debe tener cada tipo de desperfecto.
 	private String nombre;
 	private double precioUnidad;
 	private double precioTotal;
