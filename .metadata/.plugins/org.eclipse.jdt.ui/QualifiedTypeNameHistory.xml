@@ -28,13 +28,19 @@
     <fullyQualifiedTypeName name="reyesPOO.ReyMago"/>
     <fullyQualifiedTypeName name="java.util.stream.Collector"/>
     <fullyQualifiedTypeName name="reyesPOO.Juguete"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="practica_poo02.Factura"/>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="java.util.Arrays"/>
     <fullyQualifiedTypeName name="practica_poo02.Luminaria"/>
     <fullyQualifiedTypeName name="practica_poo02.ServicioGeneral"/>
     <fullyQualifiedTypeName name="practica_poo02.Informatico"/>
     <fullyQualifiedTypeName name="java.util.Map"/>
     <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
+    <fullyQualifiedTypeName name="practica_POO03.CategoriasEmpleado"/>
+    <fullyQualifiedTypeName name="practica_POO03.Portatil"/>
+    <fullyQualifiedTypeName name="practica_POO03.Telefono"/>
+    <fullyQualifiedTypeName name="practica_POO03.Coche"/>
+    <fullyQualifiedTypeName name="java.util.Arrays"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="practica_POO03.Empleado"/>
+    <fullyQualifiedTypeName name="java.util.EnumMap"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
 </qualifiedTypeNameHistroy>
