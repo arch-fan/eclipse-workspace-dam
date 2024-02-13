@@ -10,6 +10,7 @@ public class Empleado {
 	private int edad; // Opcional
 	private String direccion; // Opcional
 	private double sueldoBruto;
+	private double sueldoBrutoTotal;
 	private double irpf; // Calcular en el constructor
 	private CategoriasEmpleado categoria = CategoriasEmpleado.JUNIOR; // Opcional
 	private double sueldoNeto; // Se calcula, opcional en constructor
@@ -21,20 +22,20 @@ public class Empleado {
 	private static final EnumMap<CategoriasEmpleado, Integer> stock = new EnumMap<>(CategoriasEmpleado.class);
 
 	static {
-		stock.put(CategoriasEmpleado.JUNIOR, 4);
-		stock.put(CategoriasEmpleado.SENIOR, 3);
-		stock.put(CategoriasEmpleado.ARQUITECTO, 2);
-		stock.put(CategoriasEmpleado.MANAGER, 1);
+		stock.put(CategoriasEmpleado.JUNIOR, 5);
+		stock.put(CategoriasEmpleado.SENIOR, 5);
+		stock.put(CategoriasEmpleado.ARQUITECTO, 5);
+		stock.put(CategoriasEmpleado.MANAGER, 5);
 	}
 
 	public Empleado(String nombre, String apellidos, double sueldoBruto) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.sueldoBruto = sueldoBruto;
-
-		this.irpf = calcularIrpf(sueldoBruto);
-		this.sueldoNeto = calcularSueldoNeto(this.sueldoBruto, this.irpf, this.categoria, this.antiguedad,
-				this.numeroDeHijos);
+		this.sueldoBrutoTotal = calcularBrutoTotal(sueldoBruto, this.categoria);
+				
+		this.irpf = calcularIrpf(this.sueldoBrutoTotal);
+		this.sueldoNeto = calcularSueldoNeto(this.sueldoBrutoTotal, this.irpf);
 
 		if (stock.get(categoria) > 0) {
 			this.material = categoria.getListaMateriales();
@@ -46,7 +47,8 @@ public class Empleado {
 			CategoriasEmpleado categoria, int antiguedad, int numeroDeHijos, int vacaciones) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
-		this.sueldoBruto = sueldoBruto + (12 * (antiguedad * 20));
+		this.sueldoBruto = sueldoBruto;
+		this.sueldoBrutoTotal = calcularBrutoTotal(sueldoBruto, antiguedad, numeroDeHijos, categoria);
 		this.edad = edad;
 		this.direccion = direccion;
 		this.categoria = categoria;
@@ -54,9 +56,8 @@ public class Empleado {
 		this.numeroDeHijos = numeroDeHijos;
 		this.vacaciones = vacaciones;
 
-		this.irpf = calcularIrpf(sueldoBruto);
-		this.sueldoNeto = calcularSueldoNeto(this.sueldoBruto, this.irpf, this.categoria, this.antiguedad,
-				this.numeroDeHijos);
+		this.irpf = calcularIrpf(this.sueldoBrutoTotal);
+		this.sueldoNeto = calcularSueldoNeto(this.sueldoBrutoTotal, this.irpf);
 
 		if (stock.get(categoria) > 0) {
 			this.material = categoria.getListaMateriales();
@@ -68,16 +69,15 @@ public class Empleado {
 	/**
 	 * @return Devuelve el porcentaje en formato decimal (10% = 0.1)
 	 */
-	private static double calcularIrpf(double sueldoBruto) {
-		double calculoBase = sueldoBruto - 15000;
+	private static double calcularIrpf(double sueldoBrutoTotal) {
+		double calculoBase = sueldoBrutoTotal - 15000;
 		double irpf = 0.1;
-
+		
 		if (calculoBase <= 0) {
 			return irpf;
 		}
-
+		
 		int vecesIrpf = (int) calculoBase / 5000;
-		System.out.println(vecesIrpf);
 
 		for (int i = 0; i < vecesIrpf; i++) {
 			irpf += 0.02;
@@ -86,24 +86,30 @@ public class Empleado {
 		return irpf;
 	}
 
-	private static double calcularSueldoNeto(double sueldoBruto, double irpf, CategoriasEmpleado categoria,
-			int antiguedad, int numeroDeHijos) {
-
-		double sumaAntiguedad = antiguedad * 20 * 12;
-		double sumaHijos = numeroDeHijos * 10 * 12;
-
-		double sueldoBrutoTotal = sueldoBruto + (sueldoBruto * categoria.getBonificacion()) + sumaAntiguedad
-				+ sumaHijos;
-
+	private static double calcularSueldoNeto(double sueldoBrutoTotal, double irpf) {
 		return sueldoBrutoTotal - (sueldoBrutoTotal * irpf);
 	}
 
+	private static double calcularBrutoTotal(double sueldoBruto, int antiguedad, int numeroDeHijos, CategoriasEmpleado categoria) {
+		double sumaAntiguedad = antiguedad * 20 * 12;
+		double sumaHijos = numeroDeHijos * 10 * 12;
+		double bonoCategoria = sueldoBruto * categoria.getBonificacion();
+		
+		return sueldoBruto + bonoCategoria + sumaAntiguedad + sumaHijos;
+	}
+	
+	private static double calcularBrutoTotal(double sueldoBruto, CategoriasEmpleado categoria) {
+		double bonoCategoria = sueldoBruto * categoria.getBonificacion();
+		
+		return sueldoBruto + bonoCategoria;
+	}
+	
 	private static void restarStock(CategoriasEmpleado categoria) {
 		stock.merge(categoria, -1, Integer::sum);
 	}
 
 	public double gastoAnual() {
-		double gastoAnual = this.sueldoNeto;
+		double gastoAnual = this.sueldoBrutoTotal;
 				
 		if(!this.material.isEmpty()) {
 			gastoAnual += this.material
@@ -111,9 +117,9 @@ public class Empleado {
 				.mapToDouble(material -> {
 					if(material.getClass().equals(Coche.class)) {
 						switch (this.categoria) {
-						case ARQUITECTO:
-							return material.getPrecio() * (52 - this.vacaciones);
 						case MANAGER:
+							return material.getPrecio() * (52 - this.vacaciones);
+						case ARQUITECTO:
 							return material.getPrecio() * 52;
 						default:
 							throw new Error("Unhandle Case Exception");
@@ -168,59 +174,11 @@ public class Empleado {
 		return vacaciones;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
-	}
-
-	public void setEdad(Integer edad) {
-		this.edad = edad;
-	}
-
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
-
-	public void setSueldoBruto(double sueldoBruto) {
-		this.sueldoBruto = sueldoBruto;
-	}
-
-	public void setIrpf(Double irpf) {
-		this.irpf = irpf;
-	}
-
-	public void setSueldoNeto(Double sueldoNeto) {
-		this.sueldoNeto = sueldoNeto;
-	}
-
-	public void setAntiguedad(int antiguedad) {
-		this.antiguedad = antiguedad;
-	}
-
-	public void setNumeroDeHijos(Integer numeroDeHijos) {
-		this.numeroDeHijos = numeroDeHijos;
-	}
-
-	public void setVacaciones(Integer vacaciones) {
-		this.vacaciones = vacaciones;
-	}
-
-	public CategoriasEmpleado getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(CategoriasEmpleado categoria) {
-		this.categoria = categoria;
-	}
-
 	public List<Material> getMaterial() {
 		return material;
 	}
 
-	public void setMaterial(List<Material> material) {
-		this.material = material;
+	public CategoriasEmpleado getCategoria() {
+		return categoria;
 	}
 }

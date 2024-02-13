@@ -10,7 +10,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		List<Empleado> empleados = Arrays.asList(
-				new Empleado("Pedro", "García", 10002.21),
+				new Empleado("Pedro", "García", 26926.21),
 		        new Empleado("Laura", "Sánchez", 24961.15),
 		        new Empleado("José", "Pérez", 28059.87),
 		        new Empleado("José", "Gómez", 22787.88),
