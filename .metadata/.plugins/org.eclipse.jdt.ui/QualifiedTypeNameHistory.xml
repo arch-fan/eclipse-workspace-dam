@@ -33,14 +33,21 @@
     <fullyQualifiedTypeName name="practica_poo02.ServicioGeneral"/>
     <fullyQualifiedTypeName name="practica_poo02.Informatico"/>
     <fullyQualifiedTypeName name="java.util.Map"/>
-    <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
-    <fullyQualifiedTypeName name="practica_POO03.CategoriasEmpleado"/>
     <fullyQualifiedTypeName name="practica_POO03.Portatil"/>
     <fullyQualifiedTypeName name="practica_POO03.Telefono"/>
-    <fullyQualifiedTypeName name="practica_POO03.Coche"/>
     <fullyQualifiedTypeName name="java.util.Arrays"/>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="practica_POO03.Empleado"/>
-    <fullyQualifiedTypeName name="java.util.EnumMap"/>
     <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="practica_POO03.Material"/>
+    <fullyQualifiedTypeName name="java.lang.Exception"/>
+    <fullyQualifiedTypeName name="java.util.stream.Stream"/>
+    <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
+    <fullyQualifiedTypeName name="java.util.EnumMap"/>
+    <fullyQualifiedTypeName name="practica_POO03.CategoriasEmpleado"/>
+    <fullyQualifiedTypeName name="java.util.Comparator"/>
+    <fullyQualifiedTypeName name="java.util.Optional"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="practica_POO03.Coche"/>
+    <fullyQualifiedTypeName name="javax.naming.NamingEnumeration"/>
+    <fullyQualifiedTypeName name="java.util.Enumeration"/>
 </qualifiedTypeNameHistroy>

@@ -1,5 +1,6 @@
 package practica_POO03;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
@@ -14,17 +15,17 @@ public class Empleado {
 	private double sueldoNeto; // Se calcula, opcional en constructor
 	private int antiguedad = 0; // Opcional
 	private int numeroDeHijos = 0; // Opcional
-	private int vacaciones; // Opcional
-	private List<Material> material;
-	
+	private int vacaciones; // Opcional, en semanas
+	private List<Material> material = new ArrayList<>();
+
 	private static final EnumMap<CategoriasEmpleado, Integer> stock = new EnumMap<>(CategoriasEmpleado.class);
 
-    static {
-        stock.put(CategoriasEmpleado.JUNIOR, 4);
-        stock.put(CategoriasEmpleado.SENIOR, 3);
-        stock.put(CategoriasEmpleado.ARQUITECTO, 2);
-        stock.put(CategoriasEmpleado.MANAGER, 1);
-    }
+	static {
+		stock.put(CategoriasEmpleado.JUNIOR, 4);
+		stock.put(CategoriasEmpleado.SENIOR, 3);
+		stock.put(CategoriasEmpleado.ARQUITECTO, 2);
+		stock.put(CategoriasEmpleado.MANAGER, 1);
+	}
 
 	public Empleado(String nombre, String apellidos, double sueldoBruto) {
 		this.nombre = nombre;
@@ -34,8 +35,8 @@ public class Empleado {
 		this.irpf = calcularIrpf(sueldoBruto);
 		this.sueldoNeto = calcularSueldoNeto(this.sueldoBruto, this.irpf, this.categoria, this.antiguedad,
 				this.numeroDeHijos);
-		
-		if(stock.get(categoria) <= 0) {
+
+		if (stock.get(categoria) > 0) {
 			this.material = categoria.getListaMateriales();
 			restarStock(categoria);
 		}
@@ -45,7 +46,7 @@ public class Empleado {
 			CategoriasEmpleado categoria, int antiguedad, int numeroDeHijos, int vacaciones) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
-		this.sueldoBruto = sueldoBruto;
+		this.sueldoBruto = sueldoBruto + (12 * (antiguedad * 20));
 		this.edad = edad;
 		this.direccion = direccion;
 		this.categoria = categoria;
@@ -56,19 +57,19 @@ public class Empleado {
 		this.irpf = calcularIrpf(sueldoBruto);
 		this.sueldoNeto = calcularSueldoNeto(this.sueldoBruto, this.irpf, this.categoria, this.antiguedad,
 				this.numeroDeHijos);
-		
-		if(stock.get(categoria) <= 0) {
+
+		if (stock.get(categoria) > 0) {
 			this.material = categoria.getListaMateriales();
 			restarStock(categoria);
 		}
-		
+
 	}
 
 	/**
 	 * @return Devuelve el porcentaje en formato decimal (10% = 0.1)
 	 */
 	private static double calcularIrpf(double sueldoBruto) {
-		double calculoBase = sueldoBruto / 15000;
+		double calculoBase = sueldoBruto - 15000;
 		double irpf = 0.1;
 
 		if (calculoBase <= 0) {
@@ -76,6 +77,7 @@ public class Empleado {
 		}
 
 		int vecesIrpf = (int) calculoBase / 5000;
+		System.out.println(vecesIrpf);
 
 		for (int i = 0; i < vecesIrpf; i++) {
 			irpf += 0.02;
@@ -97,8 +99,34 @@ public class Empleado {
 	}
 
 	private static void restarStock(CategoriasEmpleado categoria) {
-        stock.merge(categoria, -1, Integer::sum);
-    }
+		stock.merge(categoria, -1, Integer::sum);
+	}
+
+	public double gastoAnual() {
+		double gastoAnual = this.sueldoNeto;
+				
+		if(!this.material.isEmpty()) {
+			gastoAnual += this.material
+				.stream()
+				.mapToDouble(material -> {
+					if(material.getClass().equals(Coche.class)) {
+						switch (this.categoria) {
+						case ARQUITECTO:
+							return material.getPrecio() * (52 - this.vacaciones);
+						case MANAGER:
+							return material.getPrecio() * 52;
+						default:
+							throw new Error("Unhandle Case Exception");
+						}
+					} else {
+						return material.getPrecio();
+					}
+				})
+				.sum();
+		}
+				
+		return gastoAnual;
+	}
 	
 	public String getNombre() {
 		return nombre;
@@ -178,5 +206,21 @@ public class Empleado {
 
 	public void setVacaciones(Integer vacaciones) {
 		this.vacaciones = vacaciones;
+	}
+
+	public CategoriasEmpleado getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(CategoriasEmpleado categoria) {
+		this.categoria = categoria;
+	}
+
+	public List<Material> getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(List<Material> material) {
+		this.material = material;
 	}
 }
