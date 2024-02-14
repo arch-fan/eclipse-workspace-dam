@@ -20,16 +20,16 @@ public class Main {
 		        new Empleado("Sofía", "Sánchez", 20462.43),
 		        new Empleado("Carlos", "López", 29664.14),
 		        new Empleado("Luis", "Sánchez", 27493.68),
-		        new Empleado("Carmen", "Fernández", 23458.43, 46, "Calle 70", CategoriasEmpleado.SENIOR, 22, 0, 2),
-		        new Empleado("Carmen", "García", 27805.46, 24, "Calle 6", CategoriasEmpleado.ARQUITECTO, 33, 1, 4),
-		        new Empleado("Juan", "Pérez", 20358.27, 64, "Calle 7", CategoriasEmpleado.SENIOR, 32, 0, 5),
-		        new Empleado("Carlos", "Gómez", 23864.87, 25, "Calle 59", CategoriasEmpleado.MANAGER, 29, 4, 5),
-		        new Empleado("Carmen", "Sánchez", 23849.0, 54, "Calle 81", CategoriasEmpleado.JUNIOR, 30, 5, 1),
-		        new Empleado("Luis", "Jiménez", 21694.04, 19, "Calle 20", CategoriasEmpleado.SENIOR, 24, 0, 1),
-		        new Empleado("Pedro", "Hernández", 28268.35, 47, "Calle 39", CategoriasEmpleado.SENIOR, 37, 5, 9),
-		        new Empleado("Laura", "Gómez", 28378.97, 52, "Calle 77", CategoriasEmpleado.ARQUITECTO, 35, 2, 1),
-		        new Empleado("Luis", "Gómez", 27673.18, 35, "Calle 45", CategoriasEmpleado.MANAGER, 36, 5, 0),
-		        new Empleado("María", "López", 21161.42, 53, "Calle 52", CategoriasEmpleado.MANAGER, 37, 4, 10)
+		        new Empleado("Carmen", "Fernández", 23458.43, 46, "Calle 70", "senior", 22, 0, 2),
+		        new Empleado("Carmen", "García", 27805.46, 24, "Calle 6", "arquitecto", 33, 1, 4),
+		        new Empleado("Juan", "Pérez", 20358.27, 64, "Calle 7", "senior", 32, 0, 5),
+		        new Empleado("Carlos", "Gómez", 23864.87, 25, "Calle 59", "manager", 29, 4, 5),
+		        new Empleado("Carmen", "Sánchez", 23849.0, 54, "Calle 81", "junior", 30, 5, 1),
+		        new Empleado("Luis", "Jiménez", 21694.04, 19, "Calle 20", "senior", 24, 0, 1),
+		        new Empleado("Pedro", "Hernández", 28268.35, 47, "Calle 39", "senior", 37, 5, 9),
+		        new Empleado("Laura", "Gómez", 28378.97, 52, "Calle 77", "arquitecto", 35, 2, 1),
+		        new Empleado("Luis", "Gómez", 27673.18, 35, "Calle 45", "manager", 36, 5, 0),
+		        new Empleado("María", "López", 21161.42, 53, "Calle 52", "manager", 37, 4, 10)
 		);
 				
 		System.out.println("--- Gasto total de la empresa ---");
@@ -55,11 +55,11 @@ public class Main {
 		empleados.stream()
 				.map(Empleado::getCategoria)
 				.collect(Collectors.groupingBy(
-							categoria -> categoria.name(),
+							categoria -> categoria.getNombre(),
 							Collectors.counting()
 						)
 				).forEach((categoria, cantidad) -> {
-					System.out.println(categoria + ": " + cantidad);
+					System.out.println(capitalize(categoria) + ": " + cantidad);
 				});
 		
 		System.out.println();
@@ -82,13 +82,17 @@ public class Main {
 					
 			        for (int i = 0; i < materiales.size(); i++) {
 			            Material material = materiales.get(i);
-			            if (material.getClass().equals(Coche.class)) {
-			                System.out.println(empleado.getNombre() + " tiene el Coche " + material.name());
+			            if (material.getCategoria().equals("coche")) {
+			                System.out.println(empleado.getNombre() + " tiene el " + material.getNombre());
 			                break;
 			            }
 			        }
 			});
 
+	}
+
+	public static String capitalize(String txt) {
+		return txt.substring(0, 1).toUpperCase() + txt.substring(1, txt.length());
 	}
 
 }
