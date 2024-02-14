@@ -23,7 +23,6 @@
     <fullyQualifiedTypeName name="java.util.Scanner"/>
     <fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
     <fullyQualifiedTypeName name="java.lang.Error"/>
-    <fullyQualifiedTypeName name="java.util.HashMap"/>
     <fullyQualifiedTypeName name="java.util.Set"/>
     <fullyQualifiedTypeName name="reyesPOO.ReyMago"/>
     <fullyQualifiedTypeName name="java.util.stream.Collector"/>
@@ -32,12 +31,10 @@
     <fullyQualifiedTypeName name="practica_poo02.Luminaria"/>
     <fullyQualifiedTypeName name="practica_poo02.ServicioGeneral"/>
     <fullyQualifiedTypeName name="practica_poo02.Informatico"/>
-    <fullyQualifiedTypeName name="java.util.Map"/>
     <fullyQualifiedTypeName name="practica_POO03.Portatil"/>
     <fullyQualifiedTypeName name="practica_POO03.Telefono"/>
     <fullyQualifiedTypeName name="java.util.Arrays"/>
     <fullyQualifiedTypeName name="practica_POO03.Empleado"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="practica_POO03.Material"/>
     <fullyQualifiedTypeName name="java.lang.Exception"/>
     <fullyQualifiedTypeName name="java.util.stream.Stream"/>
@@ -50,4 +47,7 @@
     <fullyQualifiedTypeName name="practica_POO03.Coche"/>
     <fullyQualifiedTypeName name="javax.naming.NamingEnumeration"/>
     <fullyQualifiedTypeName name="java.util.Enumeration"/>
+    <fullyQualifiedTypeName name="java.util.Map"/>
+    <fullyQualifiedTypeName name="java.util.HashMap"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
 </qualifiedTypeNameHistroy>

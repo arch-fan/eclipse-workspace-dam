@@ -2,7 +2,9 @@ package practica_POO03;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Empleado {
 	private String nombre;
@@ -19,7 +21,7 @@ public class Empleado {
 	private int vacaciones; // Opcional, en semanas
 	private List<Material> material = new ArrayList<>();
 
-	private static final EnumMap<CategoriasEmpleado, Integer> stock = new EnumMap<>(CategoriasEmpleado.class);
+	private static final Map<CategoriaEmpleado, Integer> stock = new HashMap<>();
 
 	static {
 		stock.put(CategoriasEmpleado.JUNIOR, 5);
