@@ -1,0 +1,27 @@
+Numero de consonantes = 38
+------------------------------
+Numero de vocales = 29
+Porcentaje de 'a': 27,59%
+Porcentaje de 'e': 20,69%
+Porcentaje de 'u': 6,90%
+Porcentaje de 'i': 13,79%
+Porcentaje de 'o': 31,03%
+------------------------------
+Numero de lineas = 11
+Numero de lineas en blanco = 1
+Numero de numeros = 0
+------------------------------
+El texto cambiado es:
+bUENOS DIAS CLASE DE
+pROGRAMACION
+sOY jACINTO, VUESTRO PROFE FAVORITO
+l
+a
+s
+
+n
+a
+v
+e
+s
+------------------------------

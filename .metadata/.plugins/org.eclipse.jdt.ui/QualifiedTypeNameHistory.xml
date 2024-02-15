@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="FirstPackage.Calculator"/>
-    <fullyQualifiedTypeName name="java.lang.Integer"/>
-    <fullyQualifiedTypeName name="java.lang.Process"/>
-    <fullyQualifiedTypeName name="java.lang.Character"/>
     <fullyQualifiedTypeName name="java.lang.CharSequence"/>
-    <fullyQualifiedTypeName name="java.lang.StringBuilder"/>
     <fullyQualifiedTypeName name="java.util.Map.Entry"/>
     <fullyQualifiedTypeName name="java.lang.System"/>
     <fullyQualifiedTypeName name="Practica3.TipoDieta"/>
@@ -18,7 +13,6 @@
     <fullyQualifiedTypeName name="java.util.regex.Pattern"/>
     <fullyQualifiedTypeName name="java.util.regex.Matcher"/>
     <fullyQualifiedTypeName name="java.lang.String"/>
-    <fullyQualifiedTypeName name="java.util.Scanner"/>
     <fullyQualifiedTypeName name="java.lang.Error"/>
     <fullyQualifiedTypeName name="java.util.Set"/>
     <fullyQualifiedTypeName name="reyesPOO.ReyMago"/>
@@ -32,7 +26,6 @@
     <fullyQualifiedTypeName name="practica_POO03.Telefono"/>
     <fullyQualifiedTypeName name="practica_POO03.Empleado"/>
     <fullyQualifiedTypeName name="java.lang.Exception"/>
-    <fullyQualifiedTypeName name="java.util.stream.Stream"/>
     <fullyQualifiedTypeName name="java.util.EnumMap"/>
     <fullyQualifiedTypeName name="practica_POO03.CategoriasEmpleado"/>
     <fullyQualifiedTypeName name="java.util.Comparator"/>
@@ -40,8 +33,6 @@
     <fullyQualifiedTypeName name="practica_POO03.Coche"/>
     <fullyQualifiedTypeName name="javax.naming.NamingEnumeration"/>
     <fullyQualifiedTypeName name="java.util.Enumeration"/>
-    <fullyQualifiedTypeName name="java.util.Map"/>
-    <fullyQualifiedTypeName name="java.util.HashMap"/>
     <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
     <fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
     <fullyQualifiedTypeName name="practica_POO03.Material"/>
@@ -51,4 +42,22 @@
     <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="practica_POO03.CategoriaEmpleado"/>
+    <fullyQualifiedTypeName name="java.util.Scanner"/>
+    <fullyQualifiedTypeName name="java.io.BufferedReader"/>
+    <fullyQualifiedTypeName name="java.io.FileReader"/>
+    <fullyQualifiedTypeName name="java.util.stream.Stream"/>
+    <fullyQualifiedTypeName name="java.nio.file.Files"/>
+    <fullyQualifiedTypeName name="java.nio.file.Paths"/>
+    <fullyQualifiedTypeName name="java.util.function.Consumer"/>
+    <fullyQualifiedTypeName name="practica7.Lector"/>
+    <fullyQualifiedTypeName name="java.util.Map"/>
+    <fullyQualifiedTypeName name="java.lang.StringBuilder"/>
+    <fullyQualifiedTypeName name="java.util.HashMap"/>
+    <fullyQualifiedTypeName name="practica7.Estadisticas"/>
+    <fullyQualifiedTypeName name="practica7.Analizador"/>
+    <fullyQualifiedTypeName name="java.io.Console"/>
+    <fullyQualifiedTypeName name="java.io.BufferedWriter"/>
+    <fullyQualifiedTypeName name="java.io.FileWriter"/>
+    <fullyQualifiedTypeName name="java.io.IOException"/>
+    <fullyQualifiedTypeName name="practica7.Fichero"/>
 </qualifiedTypeNameHistroy>
