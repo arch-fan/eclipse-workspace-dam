@@ -18,6 +18,7 @@ public class Empleado {
 	private int vacaciones; // Opcional, en semanas
 	private List<Material> material = new ArrayList<>();
 
+	// Usamos la sobrecarga de constructores si queremos especificar mas datos sobre el Empleado
 	public Empleado(String nombre, String apellidos, double sueldoBruto) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
@@ -66,6 +67,7 @@ public class Empleado {
 			return irpf;
 		}
 		
+		// Por cada 5000€ extra, sumamos 0.02 al porcentaje del IRPF.
 		int vecesIrpf = (int) calculoBase / 5000;
 
 		for (int i = 0; i < vecesIrpf; i++) {
@@ -75,10 +77,12 @@ public class Empleado {
 		return irpf;
 	}
 
+	// Metodo para restart el irpf al sueldo bruto total.
 	private static double calcularSueldoNeto(double sueldoBrutoTotal, double irpf) {
 		return sueldoBrutoTotal - (sueldoBrutoTotal * irpf);
 	}
 
+	// Con este metodo, sumamos los pluses correspondientes al calculo del bruto
 	private static double calcularBrutoTotal(double sueldoBruto, int antiguedad, int numeroDeHijos, CategoriaEmpleado categoria) {
 		double sumaAntiguedad = antiguedad * 20 * 12;
 		double sumaHijos = numeroDeHijos * 10 * 12;
@@ -87,19 +91,24 @@ public class Empleado {
 		return sueldoBruto + bonoCategoria + sumaAntiguedad + sumaHijos;
 	}
 	
+	// Creamos el metodo con el mismo nombre pero con otros parametros para cuando no tenemos pluses
 	private static double calcularBrutoTotal(double sueldoBruto, CategoriaEmpleado categoria) {
 		double bonoCategoria = sueldoBruto * categoria.getBonificacion();
 		
 		return sueldoBruto + bonoCategoria;
 	}
 
+	// Metodo para calcular el gasto anual que le supone a la empresa un empleado
 	public double gastoAnual() {
 		double gastoAnual = this.sueldoBrutoTotal;
-				
+		
+		// Si no esta vacio el array de materiales, generamos los gastos de la empresa
 		if(!this.material.isEmpty()) {
 			gastoAnual += this.material
 				.stream()
 				.mapToDouble(material -> {
+					// Si la categoria del material es coche, dependiendo de la categoria del trabajador
+					// calcularemos el gasto del coche de una manera u otra.
 					if(material.getCategoria().equals("coche")) {
 						switch (this.categoria.getNombre()) {
 						case "manager":
@@ -110,6 +119,7 @@ public class Empleado {
 							throw new Error("Unhandle Case Exception");
 						}
 					} else {
+						// Si no es un coche, solo devolvemos el precio
 						return material.getPrecio();
 					}
 				})

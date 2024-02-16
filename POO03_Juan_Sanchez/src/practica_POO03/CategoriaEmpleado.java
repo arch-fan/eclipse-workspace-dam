@@ -6,12 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Clase para guardar cada categoria, con su bonificacion
 public class CategoriaEmpleado {
 	private final String nombre;
 	private final double bonificacion;
 
+	// Lista de categorias disponibles
 	private static final List<String> categorias = Arrays.asList("junior", "senior", "manager", "arquitecto");
+	// Map en el que guardamos la categoria y su correspondiente bonificacion
 	private static final Map<String, Double> bonificaciones = new HashMap<>();
+	// Map en el que guardamos la categoria y su stock disponible de material
 	private static final Map<String, Integer> stockPorCategoria = new HashMap<>();
 	
 	static {
@@ -47,6 +51,7 @@ public class CategoriaEmpleado {
 		return categorias;
 	}
 	
+	// Metodo para restar stock a una categoria especificada
 	public static void restartStockPorCategoria(String categoria) throws IllegalArgumentException {
 		if(comprobarCategoria(categoria)) {
 			stockPorCategoria.merge(categoria, -1, Integer::sum);
@@ -64,9 +69,12 @@ public class CategoriaEmpleado {
 		return stockPorCategoria;
 	}
 
+	// Generamos un kit de materiales en base a la categoria indicada
 	public static List<Material> generateKit(String categoria) {
+		// recuperamos el stock disponible de la categoria indicada
 		int currentStock = stockPorCategoria.get(categoria);
 		
+		// Dependiendo de la categoria, le damos un kit u otro, y restamos uno al stock de la categoria correspondiente
 		if(categoria.equals(categorias.get(0)) && currentStock > 0) {
 			List<Material> kit = Arrays.asList(
 					new Material("Portatil", genIdByCategory(categoria), "Dell", 500)
@@ -104,10 +112,12 @@ public class CategoriaEmpleado {
 			
 			return kit;
 		} else {
+			// Si no queda stock, devuelve un array vacio
 			return new ArrayList<Material>(0);
 		}
 	}
 	
+	// Metodo para generar un id aleatorio en base al stock disponible
 	private static int genIdByCategory(String categoria) {
 		int base = stockPorCategoria.get(categoria);
 		

@@ -3,12 +3,12 @@ package practica_POO03;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Main {
 
 	public static void main(String[] args) {
+		// ArrayList en el que trabajaremos principalmente con todos nuestros empleados
 		List<Empleado> empleados = Arrays.asList(
 				new Empleado("Pedro", "García", 26926.21),
 		        new Empleado("Laura", "Sánchez", 24961.15),
@@ -55,22 +55,21 @@ public class Main {
 		empleados.stream()
 				.map(Empleado::getCategoria)
 				.collect(Collectors.groupingBy(
+						// Agrupamos en un Map por nombre de la categoria
 							categoria -> categoria.getNombre(),
 							Collectors.counting()
 						)
 				).forEach((categoria, cantidad) -> {
+					// Usamos el metodo capitalize para convertir la primera letra a mayuscula
 					System.out.println(capitalize(categoria) + ": " + cantidad);
 				});
 		
 		System.out.println();
 		
 		System.out.println("--- El trabajador que mas cobra ---");
-		{
-			Optional<Empleado> empleadoMasCobra = empleados.stream().max(Comparator.comparingDouble(Empleado::getSueldoNeto));
-			empleadoMasCobra.ifPresent(empleado -> {
-				System.out.println(empleado.getNombre() + ": " + empleado.getSueldoNeto() + "€");
-			});
-		}
+		empleados.stream().max(Comparator.comparingDouble(Empleado::getSueldoNeto)).ifPresent(empleado -> {
+			System.out.println(empleado.getNombre() + ": " + empleado.getSueldoNeto() + "€");
+		});
 		
 		System.out.println();
 		
@@ -78,15 +77,12 @@ public class Main {
 		empleados
 			.stream()
 			.forEach(empleado -> {
-					List<Material> materiales = empleado.getMaterial();
-					
-			        for (int i = 0; i < materiales.size(); i++) {
-			            Material material = materiales.get(i);
-			            if (material.getCategoria().equals("coche")) {
-			                System.out.println(empleado.getNombre() + " tiene el " + material.getNombre());
-			                break;
-			            }
-			        }
+				// Iteramos cada material y filtramos por su categoria coche, si lo contiene lo mostramos
+					empleado.getMaterial()
+						.stream()
+						.filter(material -> material.getCategoria().equals("coche"))
+						.forEach(material -> 
+							System.out.println(empleado.getNombre() + " tiene el " + material.getNombre()));
 			});
 
 	}

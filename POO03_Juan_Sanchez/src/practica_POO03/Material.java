@@ -43,6 +43,7 @@ public class Material {
 		return categorias;
 	}
 
+	// Metodo para comprobar si la categoria enviada al metodo es valida
 	public static boolean comprobarCategoria(String categoria) {
 		return categorias.contains(categoria.toLowerCase());
 	}
