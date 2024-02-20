@@ -1,16 +1,20 @@
 package practica7;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Estadisticas {
 	private int nConsonantes = 0;
-	private final Map<Character, Integer> estadisticaVocales = new HashMap<>();
+	private final Map<Character, Integer> estadisticaVocales = new TreeMap<>();
 	private int nLineas = 0;
 	private int nLineasBlanco = 0;
 	private int nNumeros = 0;
 	private final StringBuilder textoCambiado = new StringBuilder();
 	
+	/**
+	 * Metodo para sumar las estadisticas de la linea indicada
+	 * @param line Linea de texto a procesar
+	 * */
 	public void generarEstadisticas(String line) {
         if (line.trim().isEmpty()) {
             nLineasBlanco++;
@@ -46,6 +50,10 @@ public class Estadisticas {
         return "bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ".indexOf(c) != -1;
     }
     
+    /**
+     * Metodo para generar el texto de las estadisticas.
+     * @return String con todas las estadisticas
+     * */
     public String resultado() {
         StringBuilder resultado = new StringBuilder();
         
@@ -56,7 +64,6 @@ public class Estadisticas {
         resultado.append("Numero de vocales = ").append(totalVocales).append("\n");
         
         estadisticaVocales.forEach((character, quantity) -> {
-        	
             double porcentaje = totalVocales > 0 ? 100.0 * quantity / totalVocales : 0;
             resultado.append("Porcentaje de '").append(character).append("': ")
                       .append(String.format("%.2f", porcentaje)).append("%\n");
