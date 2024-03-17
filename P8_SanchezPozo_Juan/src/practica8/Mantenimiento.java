@@ -1,8 +1,11 @@
+package practica8;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class Mantenimiento {
@@ -87,9 +90,9 @@ public class Mantenimiento {
         return true;
     }
 
-    public void consumirMantenimiento(List<Pieza> storePiezas, int horasOficialesTotales, int horasAyudantesTotales) {
-        horasOficialesTotales = horasAyudantesTotales - horasOficial;
-        horasAyudantesTotales = horasAyudantesTotales - horasAyudante;
+    public void consumirMantenimiento(List<Pieza> storePiezas, AtomicInteger horasOficialesTotales, AtomicInteger horasAyudantesTotales) {
+        horasOficialesTotales.getAndAdd(-horasOficial);
+        horasAyudantesTotales.getAndAdd(-horasAyudante);
 
         for (Pieza pieza : piezasNecesarias) {
             Pieza piezaFromStore = storePiezas
